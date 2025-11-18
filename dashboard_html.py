@@ -308,12 +308,19 @@ def get_dashboard_html():
             })
                 .then(response => {
                     if (!response.ok) {
+                        // Se o status for 404, o servidor pode estar em um estado de inicialização.
+                        // Não lançamos um erro fatal, mas paramos o processamento.
+                        if (response.status === 404) {
+                            console.warn('API endpoint not found (404). Server might be initializing.');
+                            return null; // Retorna null para interromper o fluxo de .then(data => ...)
+                        }
                         throw new Error(`HTTP error! status: ${response.status}`);
                     }
                     return response.json();
                 })
-                .then(data => {
-                    lastData = data;
+.then(data => {
+                        if (!data) return; // Interrompe se o passo anterior retornou null
+                        lastData = data;
                     updateDebug(`Update #${updateCount} - CMDR: ${data.commander}, Ship: ${data.ship}, System: ${data.system}`);
                     let html = '';
                     const statusClass = data.waiting_for_files ? 'status-box waiting-status' : 'status-box';
