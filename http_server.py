@@ -24,7 +24,8 @@ class EDRequestHandler(BaseHTTPRequestHandler):
             self.end_headers()
             self.wfile.write(get_dashboard_html().encode())
         
-elif self.path.split('?')[0] == '/api/data':            self.send_response(200)
+elif self.path.split('?')[0] == '/api/data':
+            self.send_response(200)
             self.send_header('Content-type', 'application/json')
             self.send_header('Access-Control-Allow-Origin', '*')
             self.end_headers()
