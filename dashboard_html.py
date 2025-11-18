@@ -308,11 +308,20 @@ def get_dashboard_html():
             })
                 .then(response => {
                     if (!response.ok) {
+                        // Se o status for 404, o servidor pode estar em um estado de inicialização.
+                        // Retorna um objeto vazio para evitar o erro, mas não processa dados.
+                        if (response.status === 404) {
+                            console.warn('API endpoint not found (404). Server might be initializing.');
+                            return {};
+                        }
                         throw new Error(`HTTP error! status: ${response.status}`);
                     }
                     return response.json();
                 })
                 .then(data => {
+                    // Se o objeto de dados estiver vazio, interrompe o processamento do dashboard
+                    if (Object.keys(data).length === 0) return;
+
                     lastData = data;
                     updateDebug(`Update #${updateCount} - CMDR: ${data.commander}, Ship: ${data.ship}, System: ${data.system}`);
                     let html = '';
