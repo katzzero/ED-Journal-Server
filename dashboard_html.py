@@ -14,6 +14,9 @@ def get_dashboard_html():
     <title>Elite Dangerous Dashboard</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -176,6 +179,19 @@ def get_dashboard_html():
         .status-inactive {
             color: #666;
         }
+        .debug-info {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.9);
+            color: #0f0;
+            padding: 10px;
+            border: 1px solid #0f0;
+            border-radius: 5px;
+            font-family: monospace;
+            font-size: 0.8em;
+            max-width: 300px;
+        }
     </style>
 </head>
 <body>
@@ -183,8 +199,12 @@ def get_dashboard_html():
         <h1>🚀 Elite Dangerous Dashboard</h1>
         <div id="content"></div>
     </div>
+    <div id="debug" class="debug-info" style="display: none;"></div>
     
     <script>
+        let updateCount = 0;
+        let lastData = null;
+        
         function formatCoordinate(value, type) {
             if (value === null || value === undefined) return 'N/A';
             const direction = type === 'lat' 
@@ -203,10 +223,34 @@ def get_dashboard_html():
             return '❓ Desconhecido';
         }
         
+        function updateDebug(message) {
+            const debugDiv = document.getElementById('debug');
+            const now = new Date().toLocaleTimeString('pt-BR');
+            debugDiv.innerHTML = `${now}: ${message}`;
+            console.log(`[${now}] ${message}`);
+        }
+        
         function updateDashboard() {
-            fetch('/api/data')
-                .then(response => response.json())
+            updateCount++;
+            const timestamp = new Date().getTime();
+            
+            fetch(`/api/data?_=${timestamp}`, {
+                cache: 'no-cache',
+                headers: {
+                    'Cache-Control': 'no-cache, no-store, must-revalidate',
+                    'Pragma': 'no-cache'
+                }
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
                 .then(data => {
+                    lastData = data;
+                    updateDebug(`Update #${updateCount} - CMDR: ${data.commander}, Ship: ${data.ship}, System: ${data.system}`);
+                    
                     let html = '';
                     
                     // Status principal
@@ -348,7 +392,7 @@ def get_dashboard_html():
                                 html += `<div class="body-detail">Tipo: ${body.type || 'Desconhecido'}</div>`;
                                 
                                 if (body.is_landable) {
-                                    html += `<div class="body-detail landable">✅ Aterrisável</div>`;
+                                    html += `<div class="body-detail landable">✅ Aterrissável</div>`;
                                 }
                                 
                                 if (body.distance) {
@@ -372,18 +416,28 @@ def get_dashboard_html():
                     
                     if (data.last_update) {
                         const updateTime = new Date(data.last_update).toLocaleString('pt-BR');
-                        html += `<div class="last-update">Última atualização: ${updateTime}</div>`;
+                        html += `<div class="last-update">Última atualização: ${updateTime} | Refresh #${updateCount}</div>`;
                     }
                     
                     document.getElementById('content').innerHTML = html;
                 })
                 .catch(error => {
-                    console.error('Error:', error);
+                    console.error('Error fetching data:', error);
+                    updateDebug(`ERRO: ${error.message}`);
                     document.getElementById('content').innerHTML = 
-                        '<div class="warning">Erro ao conectar com o servidor</div>';
+                        `<div class="warning">Erro ao conectar com o servidor<br><small>${error.message}</small></div>`;
                 });
         }
         
+        // Pressione 'D' para ativar debug
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'd' || e.key === 'D') {
+                const debugDiv = document.getElementById('debug');
+                debugDiv.style.display = debugDiv.style.display === 'none' ? 'block' : 'none';
+            }
+        });
+        
+        console.log('Dashboard carregado. Pressione "D" para ativar debug visual.');
         updateDashboard();
         setInterval(updateDashboard, 2000);
     </script>
