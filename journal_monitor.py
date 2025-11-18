@@ -100,7 +100,7 @@ class JournalMonitor:
             }
             self.ed_data.update('location', location)
             
-            # CORRIGIDO: Limpa listas ao mudar de sistema
+            # Limpa listas ao mudar de sistema
             self.ed_data.update('system_bodies', [])
             self.ed_data.update('system_stations', [])
             
@@ -128,7 +128,6 @@ class JournalMonitor:
                 }
                 self.ed_data.update('planetary_coordinates', coords)
         
-        # CORRIGIDO: Evento Scan - captura informações de corpos celestes
         elif event_type == 'Scan':
             body_info = {
                 'name': event.get('BodyName'),
@@ -145,12 +144,11 @@ class JournalMonitor:
                 'rings': event.get('Rings', [])
             }
             
-            # CORRIGIDO: Cria nova lista ao invés de modificar cópia
+            # Cria nova lista ao invés de modificar cópia
             current_bodies = self.ed_data.get_all().get('system_bodies', [])
             body_names = [b['name'] for b in current_bodies if b.get('name')]
             
             if body_info['name'] and body_info['name'] not in body_names:
-                # Cria nova lista com o corpo adicionado
                 updated_bodies = current_bodies + [body_info]
                 self.ed_data.update('system_bodies', updated_bodies)
         
@@ -160,8 +158,6 @@ class JournalMonitor:
         
         elif event_type == 'Docked':
             self.ed_data.update('station', event.get('StationName'))
-            
-            # CORRIGIDO: Cria novo dicionário ao invés de modificar cópia
             self.ed_data.update('vehicle_state', {
                 'docked': True,
                 'landed': False,
@@ -172,7 +168,6 @@ class JournalMonitor:
                 'shields_up': True,
                 'in_flight': False
             })
-            
             self.ed_data.update('planetary_coordinates', {
                 'latitude': None,
                 'longitude': None,
@@ -184,8 +179,6 @@ class JournalMonitor:
         
         elif event_type == 'Undocked':
             self.ed_data.update('station', None)
-            
-            # CORRIGIDO: Cria novo dicionário
             self.ed_data.update('vehicle_state', {
                 'docked': False,
                 'landed': False,
@@ -206,8 +199,6 @@ class JournalMonitor:
                 'nearest_destination': event.get('NearestDestination')
             }
             self.ed_data.update('planetary_coordinates', coords)
-            
-            # CORRIGIDO: Obtém estado atual e cria novo
             current_state = self.ed_data.get_all().get('vehicle_state', {})
             new_state = current_state.copy()
             new_state.update({
@@ -224,8 +215,6 @@ class JournalMonitor:
                 'on_surface': False
             }
             self.ed_data.update('planetary_coordinates', coords)
-            
-            # CORRIGIDO
             current_state = self.ed_data.get_all().get('vehicle_state', {})
             new_state = current_state.copy()
             new_state.update({
@@ -286,6 +275,18 @@ class JournalMonitor:
             new_state = current_state.copy()
             new_state['supercruise'] = False
             self.ed_data.update('vehicle_state', new_state)
+        
+        elif event_type == 'Loadout':
+            modules = []
+            for mod in event.get("Modules", []):
+                modules.append({
+                    "slot": mod.get("Slot"),
+                    "item": mod.get("Item"),
+                    "on": mod.get("On"),
+                    "priority": mod.get("Priority"),
+                    "health": mod.get("Health")
+                })
+            self.ed_data.update("modules", modules)
         
         elif event_type == 'FuelScoop':
             fuel = event.get('Total', 0)
