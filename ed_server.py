@@ -13,7 +13,7 @@ from pathlib import Path
 
 from ed_data import EDData
 from journal_monitor import JournalMonitor
-from http_server import ThreadedHTTPServer, EDRequestHandler
+from http_server import ThreadedHTTPServer, EDRequestHandler  # CORRETO: http_server.py (com underscore), NÃO httpserver
 
 
 class EDGUI:
