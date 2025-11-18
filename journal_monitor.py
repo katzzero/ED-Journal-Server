@@ -100,6 +100,10 @@ class JournalMonitor:
             }
             self.ed_data.update('location', location)
             
+            # CORRIGIDO: Limpa listas ao mudar de sistema
+            self.ed_data.update('system_bodies', [])
+            self.ed_data.update('system_stations', [])
+            
             # Captura estações do sistema no evento FSDJump
             if 'Stations' in event:
                 stations = []
@@ -124,10 +128,11 @@ class JournalMonitor:
                 }
                 self.ed_data.update('planetary_coordinates', coords)
         
+        # CORRIGIDO: Evento Scan - captura informações de corpos celestes
         elif event_type == 'Scan':
             body_info = {
                 'name': event.get('BodyName'),
-                'type': event.get('PlanetClass') or event.get('StarType'),
+                'type': event.get('PlanetClass') or event.get('StarType') or 'Desconhecido',
                 'is_landable': event.get('Landable', False),
                 'distance': event.get('DistanceFromArrivalLS'),
                 'terraform_state': event.get('TerraformState'),
@@ -140,12 +145,14 @@ class JournalMonitor:
                 'rings': event.get('Rings', [])
             }
             
+            # CORRIGIDO: Cria nova lista ao invés de modificar cópia
             current_bodies = self.ed_data.get_all().get('system_bodies', [])
-            body_names = [b['name'] for b in current_bodies]
+            body_names = [b['name'] for b in current_bodies if b.get('name')]
             
-            if body_info['name'] not in body_names:
-                current_bodies.append(body_info)
-                self.ed_data.update('system_bodies', current_bodies)
+            if body_info['name'] and body_info['name'] not in body_names:
+                # Cria nova lista com o corpo adicionado
+                updated_bodies = current_bodies + [body_info]
+                self.ed_data.update('system_bodies', updated_bodies)
         
         elif event_type == 'FSSDiscoveryScan':
             bodies_count = event.get('BodyCount', 0)
@@ -154,14 +161,17 @@ class JournalMonitor:
         elif event_type == 'Docked':
             self.ed_data.update('station', event.get('StationName'))
             
-            vehicle_state = self.ed_data.get_all().get('vehicle_state', {})
-            vehicle_state.update({
+            # CORRIGIDO: Cria novo dicionário ao invés de modificar cópia
+            self.ed_data.update('vehicle_state', {
                 'docked': True,
                 'landed': False,
-                'in_flight': False,
-                'supercruise': False
+                'in_srv': False,
+                'in_fighter': False,
+                'supercruise': False,
+                'landing_gear_down': False,
+                'shields_up': True,
+                'in_flight': False
             })
-            self.ed_data.update('vehicle_state', vehicle_state)
             
             self.ed_data.update('planetary_coordinates', {
                 'latitude': None,
@@ -175,12 +185,17 @@ class JournalMonitor:
         elif event_type == 'Undocked':
             self.ed_data.update('station', None)
             
-            vehicle_state = self.ed_data.get_all().get('vehicle_state', {})
-            vehicle_state.update({
+            # CORRIGIDO: Cria novo dicionário
+            self.ed_data.update('vehicle_state', {
                 'docked': False,
+                'landed': False,
+                'in_srv': False,
+                'in_fighter': False,
+                'supercruise': False,
+                'landing_gear_down': False,
+                'shields_up': True,
                 'in_flight': True
             })
-            self.ed_data.update('vehicle_state', vehicle_state)
         
         elif event_type == 'Touchdown':
             coords = {
@@ -192,12 +207,14 @@ class JournalMonitor:
             }
             self.ed_data.update('planetary_coordinates', coords)
             
-            vehicle_state = self.ed_data.get_all().get('vehicle_state', {})
-            vehicle_state.update({
+            # CORRIGIDO: Obtém estado atual e cria novo
+            current_state = self.ed_data.get_all().get('vehicle_state', {})
+            new_state = current_state.copy()
+            new_state.update({
                 'landed': True,
                 'in_flight': False
             })
-            self.ed_data.update('vehicle_state', vehicle_state)
+            self.ed_data.update('vehicle_state', new_state)
         
         elif event_type == 'Liftoff':
             coords = {
@@ -208,12 +225,14 @@ class JournalMonitor:
             }
             self.ed_data.update('planetary_coordinates', coords)
             
-            vehicle_state = self.ed_data.get_all().get('vehicle_state', {})
-            vehicle_state.update({
+            # CORRIGIDO
+            current_state = self.ed_data.get_all().get('vehicle_state', {})
+            new_state = current_state.copy()
+            new_state.update({
                 'landed': False,
                 'in_flight': True
             })
-            self.ed_data.update('vehicle_state', vehicle_state)
+            self.ed_data.update('vehicle_state', new_state)
         
         elif event_type == 'ApproachSettlement':
             coords = {
@@ -226,43 +245,47 @@ class JournalMonitor:
             self.ed_data.update('planetary_coordinates', coords)
         
         elif event_type == 'LaunchSRV':
-            vehicle_state = self.ed_data.get_all().get('vehicle_state', {})
-            vehicle_state.update({
+            current_state = self.ed_data.get_all().get('vehicle_state', {})
+            new_state = current_state.copy()
+            new_state.update({
                 'in_srv': True,
                 'landed': False
             })
-            self.ed_data.update('vehicle_state', vehicle_state)
+            self.ed_data.update('vehicle_state', new_state)
         
         elif event_type == 'DockSRV':
-            vehicle_state = self.ed_data.get_all().get('vehicle_state', {})
-            vehicle_state.update({
-                'in_srv': False
-            })
-            self.ed_data.update('vehicle_state', vehicle_state)
+            current_state = self.ed_data.get_all().get('vehicle_state', {})
+            new_state = current_state.copy()
+            new_state['in_srv'] = False
+            self.ed_data.update('vehicle_state', new_state)
         
         elif event_type == 'LaunchFighter':
-            vehicle_state = self.ed_data.get_all().get('vehicle_state', {})
-            vehicle_state['in_fighter'] = True
-            self.ed_data.update('vehicle_state', vehicle_state)
+            current_state = self.ed_data.get_all().get('vehicle_state', {})
+            new_state = current_state.copy()
+            new_state['in_fighter'] = True
+            self.ed_data.update('vehicle_state', new_state)
         
         elif event_type == 'DockFighter':
-            vehicle_state = self.ed_data.get_all().get('vehicle_state', {})
-            vehicle_state['in_fighter'] = False
-            self.ed_data.update('vehicle_state', vehicle_state)
+            current_state = self.ed_data.get_all().get('vehicle_state', {})
+            new_state = current_state.copy()
+            new_state['in_fighter'] = False
+            self.ed_data.update('vehicle_state', new_state)
         
         elif event_type == 'SupercruiseEntry':
-            vehicle_state = self.ed_data.get_all().get('vehicle_state', {})
-            vehicle_state.update({
+            current_state = self.ed_data.get_all().get('vehicle_state', {})
+            new_state = current_state.copy()
+            new_state.update({
                 'supercruise': True,
                 'landed': False,
                 'in_flight': True
             })
-            self.ed_data.update('vehicle_state', vehicle_state)
+            self.ed_data.update('vehicle_state', new_state)
         
         elif event_type == 'SupercruiseExit':
-            vehicle_state = self.ed_data.get_all().get('vehicle_state', {})
-            vehicle_state['supercruise'] = False
-            self.ed_data.update('vehicle_state', vehicle_state)
+            current_state = self.ed_data.get_all().get('vehicle_state', {})
+            new_state = current_state.copy()
+            new_state['supercruise'] = False
+            self.ed_data.update('vehicle_state', new_state)
         
         elif event_type == 'FuelScoop':
             fuel = event.get('Total', 0)
