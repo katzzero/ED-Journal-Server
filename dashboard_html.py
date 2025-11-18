@@ -300,7 +300,7 @@ def get_dashboard_html():
         function updateDashboard() {
             updateCount++;
             const timestamp = new Date().getTime();
-            fetch(`/api/data?_=${timestamp}`, {
+            fetch(`/api/data?_=${timestamp}`, {            (`/api/data?_=${timestamp}`, {
                 cache: 'no-cache',
                 headers: {
                     'Cache-Control': 'no-cache, no-store, must-revalidate',
