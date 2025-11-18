@@ -44,7 +44,8 @@ class EDData:
                 'in_flight': True
             },
             'system_bodies': [],
-            'system_stations': []
+            'system_stations': [],
+            'modules': []  # Garantido para o dashboard
         }
         self.lock = threading.Lock()
     
