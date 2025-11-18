@@ -1,0 +1,3 @@
+# Elite Dangerous Journal Server
+# Todas as dependências são nativas do Python 3.7+
+# Nenhuma instalação adicional necessária
