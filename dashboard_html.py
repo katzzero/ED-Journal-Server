@@ -237,6 +237,7 @@ def get_dashboard_html():
             max-width: 330px;
             z-index: 99999;
         }
+        #content { min-height: 80vh; padding: 20px; color: #cfcfcf; }
     </style>
 </head>
 <body>
