@@ -1,509 +1,384 @@
 #!/usr/bin/env python3
 """
-Elite Dangerous Dashboard HTML Generator
-Generates the interactive web dashboard interface
+Elite Dangerous Dashboard HTML Generator with Responsive Design
+Improved styling with ED colors and modules toggle button
 """
-
-
 def get_dashboard_html():
     """Generate the HTML dashboard page"""
-    return """
-<!DOCTYPE html>
-<html>
+    return """<!DOCTYPE html>
+<html lang="pt-BR">
 <head>
-    <title>Elite Dangerous Dashboard</title>
-    <meta charset="utf-8">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-    <meta http-equiv="Pragma" content="no-cache">
-    <meta http-equiv="Expires" content="0">
+    <title>Elite Dangerous Dashboard</title>
     <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%);
-            color: #00ff00;
+        * {
             margin: 0;
-            padding: 20px;
+            padding: 0;
+            box-sizing: border-box;
         }
+        
+        :root {
+            --ed-primary: #1a1a1a;
+            --ed-dark: #0f0f0f;
+            --ed-accent: #1da552;
+            --ed-orange: #ff6600;
+            --ed-cyan: #00ccff;
+            --ed-red: #ff3333;
+            --ed-yellow: #ffdd00;
+            --ed-purple: #dd33ff;
+            --ed-text: #cfcfcf;
+            --ed-subtle: #888888;
+            --ed-grid: rgba(0, 204, 255, 0.05);
+            
+            --font-size-xs: clamp(0.75rem, 1.5vw, 1rem);
+            --font-size-sm: clamp(0.875rem, 2vw, 1.1rem);
+            --font-size-base: clamp(1rem, 2.5vw, 1.25rem);
+            --font-size-lg: clamp(1.25rem, 3vw, 1.5rem);
+            --font-size-xl: clamp(1.5rem, 4vw, 2rem);
+            --font-size-2xl: clamp(2rem, 5vw, 2.5rem);
+            
+            --spacing-xs: clamp(0.25rem, 0.5vw, 0.5rem);
+            --spacing-sm: clamp(0.5rem, 1vw, 1rem);
+            --spacing-md: clamp(1rem, 2vw, 1.5rem);
+            --spacing-lg: clamp(1.5rem, 3vw, 2.5rem);
+            --spacing-xl: clamp(2rem, 4vw, 3rem);
+            
+            --border-width: clamp(0.5px, 0.1vw, 1px);
+            --border-radius: clamp(2px, 0.5vw, 8px);
+        }
+        
+        html, body {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--ed-dark) 0%, #1a1a2e 100%);
+            color: var(--ed-text);
+            font-family: 'Segoe UI', 'Courier New', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: var(--font-size-base);
+            line-height: 1.4;
+            overflow-x: hidden;
+        }
+        
+        body {
+            padding: var(--spacing-md) var(--spacing-sm);
+            background-image: 
+                linear-gradient(90deg, transparent 0%, var(--ed-grid) 50%, transparent 100%),
+                linear-gradient(0deg, transparent 0%, var(--ed-grid) 50%, transparent 100%);
+            background-size: 50px 50px;
+        }
+        
         .container {
-            max-width: 1400px;
+            max-width: 90vw;
             margin: 0 auto;
+            background: rgba(15, 15, 15, 0.7);
+            border: var(--border-width) solid var(--ed-cyan);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-lg);
+            box-shadow: 
+                0 0 var(--spacing-md) rgba(0, 204, 255, 0.3),
+                inset 0 0 var(--spacing-md) rgba(0, 204, 255, 0.05);
         }
+        
         h1 {
+            font-size: var(--font-size-2xl);
+            color: var(--ed-orange);
+            text-shadow: 0 0 var(--spacing-md) var(--ed-orange);
             text-align: center;
-            color: #ff6600;
-            text-shadow: 0 0 10px #ff6600;
+            margin-bottom: var(--spacing-lg);
+            letter-spacing: clamp(1px, 0.2vw, 3px);
         }
+        
         h2 {
-            color: #00ddff;
-            margin-top: 0;
+            font-size: var(--font-size-xl);
+            color: var(--ed-cyan);
+            margin: var(--spacing-lg) 0 var(--spacing-md) 0;
+            border-bottom: var(--border-width) solid var(--ed-cyan);
+            padding-bottom: var(--spacing-sm);
+            text-shadow: 0 0 var(--spacing-sm) rgba(0, 204, 255, 0.5);
         }
+        
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-lg);
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, var(--ed-orange) 0%, #cc5500 100%);
+            color: #000;
+            border: none;
+            padding: var(--spacing-sm) var(--spacing-md);
+            border-radius: var(--border-radius);
+            font-size: var(--font-size-sm);
+            font-weight: bold;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: clamp(0.5px, 0.1vw, 1px);
+            box-shadow: 0 0 var(--spacing-sm) rgba(255, 102, 0, 0.5);
+            transition: all 0.2s ease;
+        }
+        
+        .btn:hover {
+            background: linear-gradient(135deg, #ffaa00 0%, #ff6600 100%);
+            box-shadow: 0 0 var(--spacing-md) rgba(255, 102, 0, 0.8);
+            transform: translate(0, -2px);
+        }
+        
+        .btn:active {
+            transform: translate(0, 0);
+        }
+        
+        .btn-modules {
+            background: linear-gradient(135deg, var(--ed-purple) 0%, #bb00dd 100%);
+            color: #fff;
+            box-shadow: 0 0 var(--spacing-sm) rgba(221, 51, 255, 0.5);
+        }
+        
+        .btn-modules:hover {
+            background: linear-gradient(135deg, #ff66ff 0%, var(--ed-purple) 100%);
+            box-shadow: 0 0 var(--spacing-md) rgba(221, 51, 255, 0.8);
+        }
+        
         .status-box {
-            background: rgba(0, 0, 0, 0.7);
-            border: 2px solid #ff6600;
-            border-radius: 10px;
-            padding: 20px;
-            margin: 20px 0;
-            box-shadow: 0 0 20px rgba(255, 102, 0, 0.3);
+            background: rgba(0, 0, 0, 0.5);
+            border: var(--border-width) solid var(--ed-orange);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-md);
+            margin: var(--spacing-md) 0;
+            box-shadow: 0 0 var(--spacing-md) rgba(255, 102, 0, 0.2);
         }
-        .waiting-status {
-            border-color: #ffaa00;
-            animation: pulse 2s infinite;
-        }
-        .coordinates-box {
-            background: rgba(0, 100, 150, 0.3);
-            border: 2px solid #00aaff;
-            border-radius: 10px;
-            padding: 20px;
-            margin: 20px 0;
-            box-shadow: 0 0 20px rgba(0, 170, 255, 0.3);
-        }
-        .vehicle-status-box {
-            background: rgba(100, 0, 100, 0.3);
-            border: 2px solid #ff00ff;
-            border-radius: 10px;
-            padding: 20px;
-            margin: 20px 0;
-            box-shadow: 0 0 20px rgba(255, 0, 255, 0.3);
-        }
-        .bodies-box, .stations-box {
-            background: rgba(50, 50, 0, 0.3);
-            border: 2px solid #ffdd00;
-            border-radius: 10px;
-            padding: 20px;
-            margin: 20px 0;
-            box-shadow: 0 0 20px rgba(255, 221, 0, 0.2);
-        }
-        .module-table {
-            position: fixed;
-            top: 42px;
-            right: 10px;
-            background: rgba(5,5,5,0.92);
-            border: 1px solid #444;
-            border-radius: 8px;
-            font-size: 14px;
-max-width: 600px;            min-width: 400px;
-            z-index: 9999;
-            color: #cfcfcf;
-        }
-        .module-table th, .module-table td {
-            padding: 8px 12px;
-            text-align: left;
-            font-size: 14px;
-        }
-        .module-table th {
-            border-bottom: 1px solid #333;
-            background: #363636;
-        }
-        .module-table tr:nth-child(even) {
-            background: #222;
-        }
-        .module-table .hlth {
-            width: 44px;
-        }
-        .module-table .prio {
-            width: 30px;
-            text-align: center;
-        }
-        .watermark {
-            position: fixed;
-            bottom: 7px;
-            right: 12px;
-            color: #666;
-            font-size: 10px;
-            opacity: 0.44;
-            pointer-events: none;
-            letter-spacing: 0.5px;
-            font-style: italic;
-            z-index: 99999;
-        }
-        @keyframes pulse {
-            0%, 100% { box-shadow: 0 0 20px rgba(255, 170, 0, 0.3); }
-            50% { box-shadow: 0 0 30px rgba(255, 170, 0, 0.6); }
-        }
+        
         .info-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 15px;
-            margin-top: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(clamp(150px, 25vw, 300px), 1fr));
+            gap: var(--spacing-md);
+            margin: var(--spacing-md) 0;
         }
+        
         .info-item {
             background: rgba(0, 50, 0, 0.3);
-            padding: 15px;
-            border-radius: 5px;
-            border-left: 3px solid #00ff00;
+            border-left: clamp(2px, 0.3vw, 4px) solid var(--ed-accent);
+            padding: var(--spacing-md);
+            border-radius: var(--border-radius);
         }
-        .coord-item {
-            background: rgba(0, 50, 100, 0.3);
-            padding: 15px;
-            border-radius: 5px;
-            border-left: 3px solid #00aaff;
-        }
-        .vehicle-item {
-            background: rgba(50, 0, 50, 0.3);
-            padding: 15px;
-            border-radius: 5px;
-            border-left: 3px solid #ff00ff;
-        }
+        
         .info-label {
-            color: #888;
-            font-size: 0.9em;
+            font-size: var(--font-size-xs);
+            color: var(--ed-subtle);
             text-transform: uppercase;
+            letter-spacing: clamp(0.5px, 0.1vw, 1px);
         }
+        
         .info-value {
-            color: #00ff00;
-            font-size: 1.2em;
+            font-size: var(--font-size-lg);
+            color: var(--ed-accent);
             font-weight: bold;
-            margin-top: 5px;
+            margin-top: var(--spacing-xs);
+            word-break: break-word;
         }
-        .coord-value {
-            color: #00ddff;
-            font-size: 1.2em;
-            font-weight: bold;
-            margin-top: 5px;
-            font-family: 'Courier New', monospace;
-        }
-        .vehicle-value {
-            color: #ff00ff;
-            font-size: 1.2em;
-            font-weight: bold;
-            margin-top: 5px;
-        }
-        .warning {
-            color: #ffaa00;
-            text-align: center;
-            font-size: 1.2em;
-            padding: 20px;
-            background: rgba(255, 170, 0, 0.1);
-            border-radius: 5px;
-            margin: 20px 0;
-        }
-        .last-update {
-            text-align: center;
-            color: #666;
-            margin-top: 20px;
-            font-size: 0.9em;
-        }
-        .planet-icon, .station-icon, .vehicle-icon {
-            font-size: 1.5em;
-            margin-right: 10px;
-        }
-        .body-list, .station-list {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 10px;
-            margin-top: 15px;
-        }
-        .body-card, .station-card {
-            background: rgba(0, 0, 0, 0.5);
-            border: 1px solid #ffdd00;
-            border-radius: 5px;
-            padding: 12px;
-        }
-        .body-name, .station-name {
-            color: #ffdd00;
-            font-weight: bold;
-            font-size: 1.1em;
-            margin-bottom: 8px;
-        }
-        .body-detail, .station-detail {
-            color: #aaa;
-            font-size: 0.9em;
-            margin: 3px 0;
-        }
-        .landable {
-            color: #00ff00;
-            font-weight: bold;
-        }
-        .status-active {
-            color: #00ff00;
-            font-weight: bold;
-        }
-        .status-inactive {
-            color: #666;
-        }
-        .debug-info {
+        
+        .module-table-container {
             position: fixed;
-            bottom: 10px;
-            left: 10px;
-            background: rgba(0, 0, 0, 0.91);
-            color: #0f0;
-            padding: 9px 12px;
-            border: 1px solid #0f0;
-            border-radius: 5px;
-            font-family: monospace;
-            font-size: 0.8em;
-            max-width: 330px;
-            z-index: 99999;
+            bottom: var(--spacing-md);
+            right: var(--spacing-md);
+            background: rgba(15, 15, 15, 0.95);
+            border: var(--border-width) solid var(--ed-purple);
+            border-radius: var(--border-radius);
+            box-shadow: 0 0 var(--spacing-lg) rgba(221, 51, 255, 0.3);
+            max-width: clamp(300px, 30vw, 600px);
+            max-height: clamp(200px, 60vh, 600px);
+            overflow-y: auto;
+            z-index: 9999;
+            display: none;
         }
-        #content { min-height: 80vh; padding: 20px; color: #cfcfcf; }
+        
+        .module-table-container.visible {
+            display: block;
+            animation: slideIn 0.3s ease;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .module-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: var(--font-size-sm);
+        }
+        
+        .module-table th {
+            background: rgba(50, 50, 50, 0.8);
+            color: var(--ed-purple);
+            padding: var(--spacing-sm);
+            text-align: left;
+            border-bottom: var(--border-width) solid var(--ed-purple);
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: var(--font-size-xs);
+        }
+        
+        .module-table td {
+            padding: var(--spacing-sm);
+            border-bottom: var(--border-width) dashed rgba(221, 51, 255, 0.3);
+            color: var(--ed-text);
+        }
+        
+        .module-table tr:nth-child(even) {
+            background: rgba(30, 30, 30, 0.5);
+        }
+        
+        .warning {
+            background: rgba(255, 102, 0, 0.1);
+            border: var(--border-width) solid var(--ed-orange);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-lg);
+            margin: var(--spacing-lg) 0;
+            color: var(--ed-orange);
+            text-align: center;
+            font-size: var(--font-size-lg);
+            text-shadow: 0 0 var(--spacing-sm) rgba(255, 102, 0, 0.3);
+        }
+        
+        .watermark {
+            position: fixed;
+            bottom: var(--spacing-sm);
+            left: var(--spacing-sm);
+            font-size: var(--font-size-xs);
+            color: var(--ed-subtle);
+            opacity: 0.3;
+            pointer-events: none;
+        }
+        
+        #content {
+            min-height: 80vh;
+            padding: var(--spacing-md);
+        }
+        
+        @media (max-width: 768px) {
+            body {
+                padding: var(--spacing-sm);
+            }
+            
+            .container {
+                padding: var(--spacing-md);
+            }
+            
+            .module-table-container {
+                max-width: 90vw;
+                bottom: var(--spacing-sm);
+                right: var(--spacing-sm);
+            }
+        }
     </style>
 </head>
 <body>
+    <div class="watermark">Elite Dangerous • CMDR Katzzero</div>
+    
     <div class="container">
         <h1>🚀 Elite Dangerous Dashboard</h1>
+        
+        <div class="controls">
+            <button class="btn btn-modules" id="toggleModules">📦 Módulos</button>
+        </div>
+        
         <div id="content"></div>
     </div>
-    <div id="modules-box"></div>
-    <div id="debug" class="debug-info" style="display: none;"></div>
-    <div class="watermark">By Cmdr. Katzzero</div>
     
-    <script>
+    <div id="modules-box" class="module-table-container"></div>
+    
+    <script>"""
         let updateCount = 0;
-        let lastData = null;
-
+        let modulesVisible = false;
+        
+        function toggleModules() {
+            const container = document.getElementById('modules-box');
+            modulesVisible = !modulesVisible;
+            container.classList.toggle('visible');
+        }
+        
         function formatCoordinate(value, type) {
             if (value === null || value === undefined) return 'N/A';
             const direction = type === 'lat' 
                 ? (value >= 0 ? 'N' : 'S')
                 : (value >= 0 ? 'E' : 'W');
-            return `${Math.abs(value).toFixed(4)}° ${direction}`;
+            return `${Math.abs(value).toFixed(2)}° ${direction}`;
         }
-
-        function getVehicleStatus(vehicleState) {
-            if (vehicleState.in_srv) return '🚙 No SRV';
-            if (vehicleState.in_fighter) return '✈️ No Fighter';
-            if (vehicleState.docked) return '🔒 Acoplado na Estação';
-            if (vehicleState.landed) return '🛬 Pousado';
-            if (vehicleState.supercruise) return '⚡ Em Supercruise';
-            if (vehicleState.in_flight) return '🚀 Em Voo';
+        
+        function getVehicleStatus(v) {
+            if (v.in_srv) return '🚙 SRV';
+            if (v.in_fighter) return '✈️ Fighter';
+            if (v.docked) return '🔒 Acoplado';
+            if (v.landed) return '🛬 Pousado';
+            if (v.supercruise) return '⚡ Supercruise';
+            if (v.in_flight) return '🚀 Em Voo';
             return '❓ Desconhecido';
         }
-
-        function updateDebug(message) {
-            const debugDiv = document.getElementById('debug');
-            const now = new Date().toLocaleTimeString('pt-BR');
-            debugDiv.innerHTML = `${now}: ${message}`;
-            console.log(`[${now}] ${message}`);
-        }
-
-        function renderModulesTable(modules) {
-            if (!modules || modules.length === 0) {
-                document.getElementById('modules-box').innerHTML = '';
-                return;
-            }
-            let html = '<div class="module-table"><table><thead><tr>';
-            html += '<th>Slot</th><th>Módulo</th><th class="hlth">Vida</th><th class="prio">Prior.</th></tr></thead><tbody>';
-            modules.forEach(m => {
-                html += `<tr>
-                  <td>${m.slot ? m.slot.replace('Slot', '').slice(0,10) : '-'}</td>
-                  <td>${(m.item || '-').split('_').pop().slice(0,13)}</td>
-                  <td class="hlth">${m.health != null ? (m.health * 100).toFixed(0) : '--'}%</td>
-                  <td class="prio">${m.priority != null ? m.priority : '-'}</td>
-                </tr>`;
+        
+        function renderModules(m) {
+            const c = document.getElementById('modules-box');
+            if (!m || m.length === 0) {c.innerHTML = '';return;}
+            let h = '<table class="module-table"><thead><tr>';
+            h += '<th>Slot</th><th>Módulo</th><th>Saúde</th><th>P</th></tr></thead><tbody>';
+            m.forEach(x => {
+                const k = x.health != null ? (x.health * 100).toFixed(0) : '--';
+                h += `<tr><td>${x.slot ? x.slot.slice(0,8) : '-'}</td>`;
+                h += `<td>${(x.item || '-').split('_').pop().slice(0,12)}</td>`;
+                h += `<td>${k}%</td><td>${x.priority || '-'}</td></tr>`;
             });
-            html += '</tbody></table></div>';
-            document.getElementById('modules-box').innerHTML = html;
+            h += '</tbody></table>';
+            c.innerHTML = h;
         }
-
-        function updateDashboard() {
+        
+        function update() {
             updateCount++;
-            const timestamp = new Date().getTime();
-            fetch(`/api/data?_=${timestamp}`, {                cache: 'no-cache',
-                headers: {
-                    'Cache-Control': 'no-cache, no-store, must-revalidate',
-                    'Pragma': 'no-cache'
+            fetch(`/api/data?_=${Date.now()}`, {cache:'no-cache',headers:{'Pragma':'no-cache'}})
+            .then(r => r.ok ? r.json() : {})
+            .then(d => {
+                if (!Object.keys(d).length) return;
+                let h = '';
+                const v = d.vehicle_state || {};
+                const co = d.planetary_coordinates || {};
+                h += `<div class="status-box"><div class="info-label">Status</div><div class="info-value">${d.status}</div></div>`;
+                if (d.waiting_for_files) {
+                    h += `<div class="warning">⏳ Aguardando Elite Dangerous...</div>`;
+                } else {
+                    h += `<div class="info-grid">`;
+                    [['Comandante', d.commander], ['Nave', d.ship], ['Sistema', d.system],
+                     ['Veículo', getVehicleStatus(v)], ['Créditos', `${d.credits.toLocaleString()} CR`]].forEach(([l, v]) => {
+                        h += `<div class="info-item"><div class="info-label">${l}</div><div class="info-value">${v}</div></div>`;
+                    });
+                    if (co.on_surface && co.latitude !== null) {
+                        h += `<div class="info-item"><div class="info-label">Lat</div><div class="info-value">${formatCoordinate(co.latitude, 'lat')}</div></div>`;
+                        h += `<div class="info-item"><div class="info-label">Lon</div><div class="info-value">${formatCoordinate(co.longitude, 'lon')}</div></div>`;
+                    }
+                    h += `</div>`;
                 }
+                if (d.last_update) {
+                    const t = new Date(d.last_update).toLocaleString('pt-BR');
+                    h += `<div style="text-align: center; color: var(--ed-subtle); font-size: var(--font-size-xs); margin-top: var(--spacing-lg);">Atualizado: ${t} | #${updateCount}</div>`;
+                }
+                document.getElementById('content').innerHTML = h;
+                renderModules(d.modules);
             })
-                .then(response => {
-                    if (!response.ok) {
-                        // Se o status for 404, o servidor pode estar em um estado de inicialização.
-                        // Retorna um objeto vazio para evitar o erro, mas não processa dados.
-                        if (response.status === 404) {
-                            console.warn('API endpoint not found (404). Server might be initializing.');
-                            return {};
-                        }
-                        throw new Error(`HTTP error! status: ${response.status}`);
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    // Se o objeto de dados estiver vazio, interrompe o processamento do dashboard
-                    if (Object.keys(data).length === 0) return;
-
-                    lastData = data;
-                    updateDebug(`Update #${updateCount} - CMDR: ${data.commander}, Ship: ${data.ship}, System: ${data.system}`);
-                    let html = '';
-                    const statusClass = data.waiting_for_files ? 'status-box waiting-status' : 'status-box';
-                    html += `<div class="${statusClass}">`;
-                    html += `<div class="info-label">Status do Sistema</div>`;
-                    html += `<div class="info-value">${data.status}</div>`;
-                    html += `</div>`;
-
-                    if (data.waiting_for_files) {
-                        html += `<div class="warning">`;
-                        html += `⏳ Aguardando arquivos do Elite Dangerous...<br>`;
-                        html += `<small>O servidor está ativo. Inicie o jogo para começar o monitoramento.</small>`;
-                        html += `</div>`;
-                    } else {
-                        const vehicleState = data.vehicle_state || {};
-                        html += `<div class="vehicle-status-box">`;
-                        html += `<h2><span class="vehicle-icon">🎮</span>Estado do Veículo</h2>`;
-                        html += `<div class="info-grid">`;
-
-                        html += `<div class="vehicle-item">`;
-                        html += `<div class="info-label">Situação Atual</div>`;
-                        html += `<div class="vehicle-value">${getVehicleStatus(vehicleState)}</div>`;
-                        html += `</div>`;
-
-                        html += `<div class="vehicle-item">`;
-                        html += `<div class="info-label">Acoplado</div>`;
-                        html += `<div class="vehicle-value ${vehicleState.docked ? 'status-active' : 'status-inactive'}">`;
-                        html += vehicleState.docked ? '✅ Sim' : '❌ Não';
-                        html += `</div></div>`;
-
-                        html += `<div class="vehicle-item">`;
-                        html += `<div class="info-label">Pousado</div>`;
-                        html += `<div class="vehicle-value ${vehicleState.landed ? 'status-active' : 'status-inactive'}">`;
-                        html += vehicleState.landed ? '✅ Sim' : '❌ Não';
-                        html += `</div></div>`;
-
-                        html += `<div class="vehicle-item">`;
-                        html += `<div class="info-label">Em Voo</div>`;
-                        html += `<div class="vehicle-value ${vehicleState.in_flight ? 'status-active' : 'status-inactive'}">`;
-                        html += vehicleState.in_flight ? '✅ Sim' : '❌ Não';
-                        html += `</div></div>`;
-
-                        html += `</div></div>`;
-
-                        const coords = data.planetary_coordinates || {};
-                        if (coords.on_surface && coords.latitude !== null) {
-                            html += `<div class="coordinates-box">`;
-                            html += `<h2><span class="planet-icon">🌍</span>Coordenadas Planetárias</h2>`;
-                            html += `<div class="info-grid">`;
-
-                            if (coords.body_name) {
-                                html += `<div class="coord-item">`;
-                                html += `<div class="info-label">Corpo Celeste</div>`;
-                                html += `<div class="coord-value">${coords.body_name}</div>`;
-                                html += `</div>`;
-                            }
-                            html += `<div class="coord-item">`;
-                            html += `<div class="info-label">Latitude</div>`;
-                            html += `<div class="coord-value">${formatCoordinate(coords.latitude, 'lat')}</div>`;
-                            html += `</div>`;
-
-                            html += `<div class="coord-item">`;
-                            html += `<div class="info-label">Longitude</div>`;
-                            html += `<div class="coord-value">${formatCoordinate(coords.longitude, 'lon')}</div>`;
-                            html += `</div>`;
-
-                            if (coords.altitude !== null && coords.altitude !== undefined) {
-                                html += `<div class="coord-item">`;
-                                html += `<div class="info-label">Altitude</div>`;
-                                html += `<div class="coord-value">${coords.altitude.toFixed(0)} m</div>`;
-                                html += `</div>`;
-                            }
-                            html += `</div></div>`;
-                        }
-
-                        html += `<div class="info-grid">`;
-                        html += `<div class="info-item">`;
-                        html += `<div class="info-label">Comandante</div>`;
-                        html += `<div class="info-value">${data.commander}</div>`;
-                        html += `</div>`;
-
-                        html += `<div class="info-item">`;
-                        html += `<div class="info-label">Nave</div>`;
-                        html += `<div class="info-value">${data.ship}</div>`;
-                        html += `</div>`;
-
-                        html += `<div class="info-item">`;
-                        html += `<div class="info-label">Sistema</div>`;
-                        html += `<div class="info-value">${data.system}</div>`;
-                        html += `</div>`;
-
-                        html += `<div class="info-item">`;
-                        html += `<div class="info-label">Estação</div>`;
-                        html += `<div class="info-value">${data.station || 'No espaço'}</div>`;
-                        html += `</div>`;
-
-                        html += `<div class="info-item">`;
-                        html += `<div class="info-label">Créditos</div>`;
-                        html += `<div class="info-value">${data.credits.toLocaleString()} CR</div>`;
-                        html += `</div>`;
-                        html += `</div>`;
-
-                        const stations = data.system_stations || [];
-                        if (stations.length > 0) {
-                            html += `<div class="stations-box">`;
-                            html += `<h2><span class="station-icon">🏢</span>Estações do Sistema (${stations.length})</h2>`;
-                            html += `<div class="station-list">`;
-
-                            stations.forEach(station => {
-                                html += `<div class="station-card">`;
-                                html += `<div class="station-name">${station.name}</div>`;
-                                html += `<div class="station-detail">Tipo: ${station.type || 'Desconhecido'}</div>`;
-                                if (station.distance) {
-                                    html += `<div class="station-detail">Distância: ${station.distance.toLocaleString()} LS</div>`;
-                                }
-                                html += `</div>`;
-                            });
-
-                            html += `</div></div>`;
-                        }
-
-                        const bodies = data.system_bodies || [];
-                        if (bodies.length > 0) {
-                            html += `<div class="bodies-box">`;
-                            html += `<h2><span class="planet-icon">🪐</span>Corpos Celestes Escaneados (${bodies.length})</h2>`;
-                            html += `<div class="body-list">`;
-
-                            bodies.forEach(body => {
-                                html += `<div class="body-card">`;
-                                html += `<div class="body-name">${body.name}</div>`;
-                                html += `<div class="body-detail">Tipo: ${body.type || 'Desconhecido'}</div>`;
-
-                                if (body.is_landable) {
-                                    html += `<div class="body-detail landable">✅ Aterrissável</div>`;
-                                }
-
-                                if (body.distance) {
-                                    html += `<div class="body-detail">Distância: ${body.distance.toLocaleString()} LS</div>`;
-                                }
-
-                                if (body.atmosphere) {
-                                    html += `<div class="body-detail">Atmosfera: ${body.atmosphere}</div>`;
-                                }
-
-                                if (body.terraform_state) {
-                                    html += `<div class="body-detail">🌱 ${body.terraform_state}</div>`;
-                                }
-
-                                html += `</div>`;
-                            });
-
-                            html += `</div></div>`;
-                        }
-                    }
-
-                    if (data.last_update) {
-                        const updateTime = new Date(data.last_update).toLocaleString('pt-BR');
-                        html += `<div class="last-update">Última atualização: ${updateTime} | Refresh #${updateCount}</div>`;
-                    }
-
-                    document.getElementById('content').innerHTML = html;
-                    // Renderiza tabela de módulos
-                    renderModulesTable(data.modules);
-                })
-                .catch(error => {
-                    console.error('Error fetching data:', error);
-                    updateDebug(`ERRO: ${error.message}`);
-                    document.getElementById('content').innerHTML = 
-                        `<div class="warning">Erro ao conectar com o servidor<br><small>${error.message}</small></div>`;
-                });
+            .catch(e => {
+                document.getElementById('content').innerHTML = `<div class="warning">❌ Erro: ${e.message}</div>`;
+            });
         }
-
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'd' || e.key === 'D') {
-                const debugDiv = document.getElementById('debug');
-                debugDiv.style.display = debugDiv.style.display === 'none' ? 'block' : 'none';
-            }
-        });
-
-        updateDashboard();
-        setInterval(updateDashboard, 2000);
+        
+        document.getElementById('toggleModules').addEventListener('click', toggleModules);
+        update();
+        setInterval(update, 2000);
     </script>
 </body>
 </html>
-    """
+"""
