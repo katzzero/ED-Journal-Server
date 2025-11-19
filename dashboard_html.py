@@ -81,16 +81,15 @@ def get_dashboard_html():
             background: rgba(5,5,5,0.92);
             border: 1px solid #444;
             border-radius: 8px;
-            font-size: 11px;
-            max-width: 270px;
-            min-width: 180px;
+            font-size: 14px;
+max-width: 600px;            min-width: 400px;
             z-index: 9999;
             color: #cfcfcf;
         }
         .module-table th, .module-table td {
-            padding: 2px 4px;
+            padding: 8px 12px;
             text-align: left;
-            font-size: 11px;
+            font-size: 14px;
         }
         .module-table th {
             border-bottom: 1px solid #333;
