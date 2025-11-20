@@ -21,6 +21,7 @@ class EDRequestHandler(BaseHTTPRequestHandler):
         if self.path == '/':
             self.send_response(200)
             self.send_header('Content-type', 'text/html')
+                        self.send_header('Cache-Control', 'no-cache, must-revalidate')  # [PERFORMANCE FIX #5] Ensure latest dashboard is fetched
             self.end_headers()
             self.wfile.write(get_dashboard_html().encode())
             
@@ -28,6 +29,7 @@ class EDRequestHandler(BaseHTTPRequestHandler):
             self.send_response(200)
             self.send_header('Content-type', 'application/json')
             self.send_header('Access-Control-Allow-Origin', '*')
+                        self.send_header('Cache-Control', 'no-cache, no-store, must-revalidate')  # [PERFORMANCE FIX #5] Prevent caching of API data
             self.end_headers()
             data = self.server.ed_data.get_all()
             self.wfile.write(json.dumps(data, indent=2).encode())
