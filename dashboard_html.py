@@ -42,6 +42,32 @@ def get_dashboard_html():
             margin: 0 auto;
         }
         
+        .main-layout {
+            display: flex;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .left-column {
+            flex: 2; /* Ocupa ~66.6% (2/3) */
+            min-width: 0; /* Permite que o conteúdo interno se ajuste */
+        }
+        
+        .right-column {
+            flex: 1; /* Ocupa ~33.3% (1/3) */
+            min-width: 0;
+        }
+        
+        @media (max-width: 1200px) {
+            .main-layout {
+                flex-direction: column;
+            }
+            .left-column, .right-column {
+                flex: none;
+                width: 100%;
+            }
+        }
+        
         h1 {
             text-align: center;
             font-size: 3em;
@@ -194,12 +220,14 @@ def get_dashboard_html():
             background: linear-gradient(135deg, rgba(0, 80, 120, 0.3) 0%, rgba(0, 50, 80, 0.3) 100%);
             border: 1px solid rgba(0, 170, 255, 0.3);
             border-radius: 16px;
-            padding: 25px;
-            margin: 20px 0;
+            padding: 15px; /* Reduzindo o padding da caixa */
+            margin: 0; /* Removendo a margem superior/inferior, já que está em uma coluna */
             box-shadow: 
                 0 8px 32px rgba(0, 0, 0, 0.3),
                 0 0 30px rgba(0, 170, 255, 0.15);
             transition: all 0.3s ease;
+            height: 100%; /* Para ocupar a altura total da coluna */
+            overflow-y: auto; /* Adicionando rolagem apenas se necessário */
         }
         
         .modules-box:hover {
@@ -217,9 +245,9 @@ def get_dashboard_html():
         }
         
         .module-table th, .module-table td {
-            padding: 10px 12px;
+            padding: 5px 8px; /* Reduzindo o padding */
             text-align: left;
-            font-size: 0.9em;
+            font-size: 0.8em; /* Reduzindo o tamanho da fonte */
         }
         
         .module-table th {
@@ -537,14 +565,18 @@ def get_dashboard_html():
         }
     </style>
 </head>
-<body>
-    <div class="container">
-        <h1>🚀 Elite Dangerous Dashboard</h1>
-        <div id="content" class="loading"></div>
-    </div>
-    <div id="modules-box"></div>
-    <div id="debug" class="debug-info" style="display: none;"></div>
-    <div class="watermark">By Cmdr. Katzzero</div>
+	<body>
+	    <div class="container">
+	        <h1>🚀 Elite Dangerous Dashboard</h1>
+	        <div class="main-layout">
+	            <div id="left-content" class="left-column loading"></div>
+	            <div id="right-content" class="right-column">
+	                <div id="modules-box"></div>
+	            </div>
+	        </div>
+	    </div>
+	    <div id="debug" class="debug-info" style="display: none;"></div>
+	    <div class="watermark">By Cmdr. Katzzero</div>
     
     <script>
         let updateCount = 0;
@@ -575,34 +607,34 @@ def get_dashboard_html():
             console.log(`[${now}] ${message}`);
         }
 
-        function renderModulesTable(modules) {
-            const modulesContainer = document.getElementById('modules-box');
-            
-            if (!modules || modules.length === 0) {
-                modulesContainer.innerHTML = '';
-                return;
-            }
-            
-            let html = '<div class="modules-box">';
-            html += '<h2><span class="station-icon">⚙️</span>Módulos da Nave (' + modules.length + ')</h2>';
-            html += '<table class="module-table"><thead><tr>';
-            html += '<th>Slot</th><th>Módulo</th><th class="hlth">Integridade</th><th class="prio">Prioridade</th></tr></thead><tbody>';
-            
-            modules.forEach(m => {
-                const health = m.health != null ? (m.health * 100).toFixed(0) : '--';
-                const healthColor = health >= 80 ? '#00ff00' : health >= 50 ? '#ffaa00' : '#ff3333';
-                
-                html += `<tr>
-                  <td class="module-slot">${m.slot ? m.slot.replace('Slot', '').replace(/([A-Z])/g, ' $1').trim() : '-'}</td>
-                  <td class="module-item">${(m.item || '-').split('_').slice(-2).join(' ')}</td>
-                  <td class="hlth" style="color: ${healthColor}">${health}%</td>
-                  <td class="prio">${m.priority != null ? m.priority : '-'}</td>
-                </tr>`;
-            });
-            
-            html += '</tbody></table></div>';
-            modulesContainer.innerHTML = html;
-        }
+	        function renderModulesTable(modules) {
+	            const modulesContainer = document.getElementById('modules-box');
+	            
+	            if (!modules || modules.length === 0) {
+	                modulesContainer.innerHTML = '<div class="modules-box"><h2><span class="station-icon">⚙️</span>Módulos da Nave</h2><p>Nenhuma informação de módulos carregada.</p></div>';
+	                return;
+	            }
+	            
+	            let html = '<div class="modules-box">';
+	            html += '<h2><span class="station-icon">⚙️</span>Módulos da Nave (' + modules.length + ')</h2>';
+	            html += '<table class="module-table"><thead><tr>';
+	            html += '<th>Slot</th><th>Módulo</th><th class="hlth">Integridade</th><th class="prio">Prioridade</th></tr></thead><tbody>';
+	            
+	            modules.forEach(m => {
+	                const health = m.health != null ? (m.health * 100).toFixed(0) : '--';
+	                const healthColor = health >= 80 ? '#00ff00' : health >= 50 ? '#ffaa00' : '#ff3333';
+	                
+	                html += `<tr>
+	                  <td class="module-slot">${m.slot ? m.slot.replace('Slot', '').replace(/([A-Z])/g, ' $1').trim() : '-'}</td>
+	                  <td class="module-item">${(m.item || '-').split('_').slice(-2).join(' ')}</td>
+	                  <td class="hlth" style="color: ${healthColor}">${health}%</td>
+	                  <td class="prio">${m.priority != null ? m.priority : '-'}</td>
+	                </tr>`;
+	            });
+	            
+	            html += '</tbody></table></div>';
+	            modulesContainer.innerHTML = html;
+	        }
 
         function updateDashboard() {
             updateCount++;
@@ -633,175 +665,175 @@ def get_dashboard_html():
                                                                                                                                 }
 
                     lastData = data;
-                    updateDebug(`Update #${updateCount} - CMDR: ${data.commander}, Ship: ${data.ship}, System: ${data.system}`);
-                    let html = '';
-                    const statusClass = data.waiting_for_files ? 'status-box waiting-status' : 'status-box';
-                    html += `<div class="${statusClass}">`;
-                    html += `<div class="info-label"><span class="status-indicator"></span> Status do Sistema</div>`;
-                    html += `<div class="info-value">${data.status}</div>`;
-                    html += `</div>`;
-
-                    if (data.waiting_for_files) {
-                        html += `<div class="warning">`;
-                        html += `⏳ Aguardando arquivos do Elite Dangerous...<br>`;
-                        html += `<small>O servidor está ativo. Inicie o jogo para começar o monitoramento.</small>`;
-                        html += `</div>`;
-                    } else {
-                        const vehicleState = data.vehicle_state || {};
-                        html += `<div class="vehicle-status-box">`;
-                        html += `<h2><span class="vehicle-icon">🎮</span>Estado do Veículo</h2>`;
-                        html += `<div class="info-grid">`;
-
-                        html += `<div class="vehicle-item">`;
-                        html += `<div class="info-label">Situação Atual</div>`;
-                        html += `<div class="vehicle-value">${getVehicleStatus(vehicleState)}</div>`;
-                        html += `</div>`;
-
-                        html += `<div class="vehicle-item">`;
-                        html += `<div class="info-label">Acoplado</div>`;
-                        html += `<div class="vehicle-value ${vehicleState.docked ? 'status-active' : 'status-inactive'}">`;
-                        html += vehicleState.docked ? '✅ Sim' : '❌ Não';
-                        html += `</div></div>`;
-
-                        html += `<div class="vehicle-item">`;
-                        html += `<div class="info-label">Pousado</div>`;
-                        html += `<div class="vehicle-value ${vehicleState.landed ? 'status-active' : 'status-inactive'}">`;
-                        html += vehicleState.landed ? '✅ Sim' : '❌ Não';
-                        html += `</div></div>`;
-
-                        html += `<div class="vehicle-item">`;
-                        html += `<div class="info-label">Em Voo</div>`;
-                        html += `<div class="vehicle-value ${vehicleState.in_flight ? 'status-active' : 'status-inactive'}">`;
-                        html += vehicleState.in_flight ? '✅ Sim' : '❌ Não';
-                        html += `</div></div>`;
-
-                        html += `</div></div>`;
-
-                        const coords = data.planetary_coordinates || {};
-                        if (coords.on_surface && coords.latitude !== null) {
-                            html += `<div class="coordinates-box">`;
-                            html += `<h2><span class="planet-icon">🌍</span>Coordenadas Planetárias</h2>`;
-                            html += `<div class="info-grid">`;
-
-                            if (coords.body_name) {
-                                html += `<div class="coord-item">`;
-                                html += `<div class="info-label">Corpo Celeste</div>`;
-                                html += `<div class="coord-value">${coords.body_name}</div>`;
-                                html += `</div>`;
-                            }
-                            html += `<div class="coord-item">`;
-                            html += `<div class="info-label">Latitude</div>`;
-                            html += `<div class="coord-value">${formatCoordinate(coords.latitude, 'lat')}</div>`;
-                            html += `</div>`;
-
-                            html += `<div class="coord-item">`;
-                            html += `<div class="info-label">Longitude</div>`;
-                            html += `<div class="coord-value">${formatCoordinate(coords.longitude, 'lon')}</div>`;
-                            html += `</div>`;
-
-                            if (coords.altitude !== null && coords.altitude !== undefined) {
-                                html += `<div class="coord-item">`;
-                                html += `<div class="info-label">Altitude</div>`;
-                                html += `<div class="coord-value">${coords.altitude.toFixed(0)} m</div>`;
-                                html += `</div>`;
-                            }
-                            
-                html += '<div class="coord-item">';
-                html += '<div class="info-label">Status</div>';
-                html += '<div class="coord-value" style="color: #ffaa00;">🪐 Próximo a um Planeta</div>';
-                html += '</div>';
-                            html += `</div></div>`;
-                        }
-
-                        html += `<div class="info-grid">`;
-                        html += `<div class="info-item">`;
-                        html += `<div class="info-label">Comandante</div>`;
-                        html += `<div class="info-value">${data.commander}</div>`;
-                        html += `</div>`;
-
-                        html += `<div class="info-item">`;
-                        html += `<div class="info-label">Nave</div>`;
-                        html += `<div class="info-value">${data.ship}</div>`;
-                        html += `</div>`;
-
-                        html += `<div class="info-item">`;
-                        html += `<div class="info-label">Sistema</div>`;
-                        html += `<div class="info-value">${data.system}</div>`;
-                        html += `</div>`;
-
-                        html += `<div class="info-item">`;
-                        html += `<div class="info-label">Estação</div>`;
-                        html += `<div class="info-value">${data.station || 'No espaço'}</div>`;
-                        html += `</div>`;
-
-                        html += `<div class="info-item">`;
-                        html += `<div class="info-label">Créditos</div>`;
-                        html += `<div class="info-value">${data.credits.toLocaleString()} CR</div>`;
-                        html += `</div>`;
-                        html += `</div>`;
-
-                        const stations = data.system_stations || [];
-                        if (stations.length > 0) {
-                            html += `<div class="stations-box">`;
-                            html += `<h2><span class="station-icon">🏢</span>Estações do Sistema (${stations.length})</h2>`;
-                            html += `<div class="station-list">`;
-
-                            stations.forEach(station => {
-                                html += `<div class="station-card">`;
-                                html += `<div class="station-name">${station.name}</div>`;
-                                html += `<div class="station-detail">Tipo: ${station.type || 'Desconhecido'}</div>`;
-                                if (station.distance) {
-                                    html += `<div class="station-detail">Distância: ${station.distance.toLocaleString()} LS</div>`;
-                                }
-                                html += `</div>`;
-                            });
-
-                            html += `</div></div>`;
-                        }
-
-                        const bodies = data.system_bodies || [];
-                        if (bodies.length > 0) {
-                            html += `<div class="bodies-box">`;
-                            html += `<h2><span class="planet-icon">🪐</span>Corpos Celestes Escaneados (${bodies.length})</h2>`;
-                            html += `<div class="body-list">`;
-
-                            bodies.forEach(body => {
-                                html += `<div class="body-card">`;
-                                html += `<div class="body-name">${body.name}</div>`;
-                                html += `<div class="body-detail">Tipo: ${body.type || 'Desconhecido'}</div>`;
-
-                                if (body.is_landable) {
-                                    html += `<div class="body-detail landable">✅ Aterrissável</div>`;
-                                }
-
-                                if (body.distance) {
-                                    html += `<div class="body-detail">Distância: ${body.distance.toLocaleString()} LS</div>`;
-                                }
-
-                                if (body.atmosphere) {
-                                    html += `<div class="body-detail">Atmosfera: ${body.atmosphere}</div>`;
-                                }
-
-                                if (body.terraform_state) {
-                                    html += `<div class="body-detail">🌱 ${body.terraform_state}</div>`;
-                                }
-
-                                html += `</div>`;
-                            });
-
-                            html += `</div></div>`;
-                        }
-                    }
-
-                    if (data.last_update) {
-                        const updateTime = new Date(data.last_update).toLocaleString('pt-BR');
-                        html += `<div class="last-update">Última atualização: ${updateTime} | Refresh #${updateCount}</div>`;
-                    }
-
-                    document.getElementById('content').innerHTML = html;
-                    document.getElementById('content').classList.remove('loading');
-                    renderModulesTable(data.modules);
-                })
+	                    updateDebug(`Update #${updateCount} - CMDR: ${data.commander}, Ship: ${data.ship}, System: ${data.system}`);
+	                    let html = '';
+	                    const statusClass = data.waiting_for_files ? 'status-box waiting-status' : 'status-box';
+	                    html += `<div class="${statusClass}">`;
+	                    html += `<div class="info-label"><span class="status-indicator"></span> Status do Sistema</div>`;
+	                    html += `<div class="info-value">${data.status}</div>`;
+	                    html += `</div>`;
+	
+	                    if (data.waiting_for_files) {
+	                        html += `<div class="warning">`;
+	                        html += `⏳ Aguardando arquivos do Elite Dangerous...<br>`;
+	                        html += `<small>O servidor está ativo. Inicie o jogo para começar o monitoramento.</small>`;
+	                        html += `</div>`;
+	                    } else {
+	                        const vehicleState = data.vehicle_state || {};
+	                        html += `<div class="vehicle-status-box">`;
+	                        html += `<h2><span class="vehicle-icon">🎮</span>Estado do Veículo</h2>`;
+	                        html += `<div class="info-grid">`;
+	
+	                        html += `<div class="vehicle-item">`;
+	                        html += `<div class="info-label">Situação Atual</div>`;
+	                        html += `<div class="vehicle-value">${getVehicleStatus(vehicleState)}</div>`;
+	                        html += `</div>`;
+	
+	                        html += `<div class="vehicle-item">`;
+	                        html += `<div class="info-label">Acoplado</div>`;
+	                        html += `<div class="vehicle-value ${vehicleState.docked ? 'status-active' : 'status-inactive'}">`;
+	                        html += vehicleState.docked ? '✅ Sim' : '❌ Não';
+	                        html += `</div></div>`;
+	
+	                        html += `<div class="vehicle-item">`;
+	                        html += `<div class="info-label">Pousado</div>`;
+	                        html += `<div class="vehicle-value ${vehicleState.landed ? 'status-active' : 'status-inactive'}">`;
+	                        html += vehicleState.landed ? '✅ Sim' : '❌ Não';
+	                        html += `</div></div>`;
+	
+	                        html += `<div class="vehicle-item">`;
+	                        html += `<div class="info-label">Em Voo</div>`;
+	                        html += `<div class="vehicle-value ${vehicleState.in_flight ? 'status-active' : 'status-inactive'}">`;
+	                        html += vehicleState.in_flight ? '✅ Sim' : '❌ Não';
+	                        html += `</div></div>`;
+	
+	                        html += `</div></div>`;
+	
+	                        const coords = data.planetary_coordinates || {};
+	                        if (coords.on_surface && coords.latitude !== null) {
+	                            html += `<div class="coordinates-box">`;
+	                            html += `<h2><span class="planet-icon">🌍</span>Coordenadas Planetárias</h2>`;
+	                            html += `<div class="info-grid">`;
+	
+	                            if (coords.body_name) {
+	                                html += `<div class="coord-item">`;
+	                                html += `<div class="info-label">Corpo Celeste</div>`;
+	                                html += `<div class="coord-value">${coords.body_name}</div>`;
+	                                html += `</div>`;
+	                            }
+	                            html += `<div class="coord-item">`;
+	                            html += `<div class="info-label">Latitude</div>`;
+	                            html += `<div class="coord-value">${formatCoordinate(coords.latitude, 'lat')}</div>`;
+	                            html += `</div>`;
+	
+	                            html += `<div class="coord-item">`;
+	                            html += `<div class="info-label">Longitude</div>`;
+	                            html += `<div class="coord-value">${formatCoordinate(coords.longitude, 'lon')}</div>`;
+	                            html += `</div>`;
+	
+	                            if (coords.altitude !== null && coords.altitude !== undefined) {
+	                                html += `<div class="coord-item">`;
+	                                html += `<div class="info-label">Altitude</div>`;
+	                                html += `<div class="coord-value">${coords.altitude.toFixed(0)} m</div>`;
+	                                html += `</div>`;
+	                            }
+	                            
+	                html += '<div class="coord-item">';
+	                html += '<div class="info-label">Status</div>';
+	                html += '<div class="coord-value" style="color: #ffaa00;">🪐 Próximo a um Planeta</div>';
+	                html += '</div>';
+	                            html += `</div></div>`;
+	                        }
+	
+	                        html += `<div class="info-grid">`;
+	                        html += `<div class="info-item">`;
+	                        html += `<div class="info-label">Comandante</div>`;
+	                        html += `<div class="info-value">${data.commander}</div>`;
+	                        html += `</div>`;
+	
+	                        html += `<div class="info-item">`;
+	                        html += `<div class="info-label">Nave</div>`;
+	                        html += `<div class="info-value">${data.ship}</div>`;
+	                        html += `</div>`;
+	
+	                        html += `<div class="info-item">`;
+	                        html += `<div class="info-label">Sistema</div>`;
+	                        html += `<div class="info-value">${data.system}</div>`;
+	                        html += `</div>`;
+	
+	                        html += `<div class="info-item">`;
+	                        html += `<div class="info-label">Estação</div>`;
+	                        html += `<div class="info-value">${data.station || 'No espaço'}</div>`;
+	                        html += `</div>`;
+	
+	                        html += `<div class="info-item">`;
+	                        html += `<div class="info-label">Créditos</div>`;
+	                        html += `<div class="info-value">${data.credits.toLocaleString()} CR</div>`;
+	                        html += `</div>`;
+	                        html += `</div>`;
+	
+	                        const stations = data.system_stations || [];
+	                        if (stations.length > 0) {
+	                            html += `<div class="stations-box">`;
+	                            html += `<h2><span class="station-icon">🏢</span>Estações do Sistema (${stations.length})</h2>`;
+	                            html += `<div class="station-list">`;
+	
+	                            stations.forEach(station => {
+	                                html += `<div class="station-card">`;
+	                                html += `<div class="station-name">${station.name}</div>`;
+	                                html += `<div class="station-detail">Tipo: ${station.type || 'Desconhecido'}</div>`;
+	                                if (station.distance) {
+	                                    html += `<div class="station-detail">Distância: ${station.distance.toLocaleString()} LS</div>`;
+	                                }
+	                                html += `</div>`;
+	                            });
+	
+	                            html += `</div></div>`;
+	                        }
+	
+	                        const bodies = data.system_bodies || [];
+	                        if (bodies.length > 0) {
+	                            html += `<div class="bodies-box">`;
+	                            html += `<h2><span class="planet-icon">🪐</span>Corpos Celestes Escaneados (${bodies.length})</h2>`;
+	                            html += `<div class="body-list">`;
+	
+	                            bodies.forEach(body => {
+	                                html += `<div class="body-card">`;
+	                                html += `<div class="body-name">${body.name}</div>`;
+	                                html += `<div class="body-detail">Tipo: ${body.type || 'Desconhecido'}</div>`;
+	
+	                                if (body.is_landable) {
+	                                    html += `<div class="body-detail landable">✅ Aterrissável</div>`;
+	                                }
+	
+	                                if (body.distance) {
+	                                    html += `<div class="body-detail">Distância: ${body.distance.toLocaleString()} LS</div>`;
+	                                }
+	
+	                                if (body.atmosphere) {
+	                                    html += `<div class="body-detail">Atmosfera: ${body.atmosphere}</div>`;
+	                                }
+	
+	                                if (body.terraform_state) {
+	                                    html += `<div class="body-detail">🌱 ${body.terraform_state}</div>`;
+	                                }
+	
+	                                html += `</div>`;
+	                            });
+	
+	                            html += `</div></div>`;
+	                        }
+	                    }
+	
+	                    if (data.last_update) {
+	                        const updateTime = new Date(data.last_update).toLocaleString('pt-BR');
+	                        html += `<div class="last-update">Última atualização: ${updateTime} | Refresh #${updateCount}</div>`;
+	                    }
+	
+	                    document.getElementById('left-content').innerHTML = html;
+	                    document.getElementById('left-content').classList.remove('loading');
+	                    renderModulesTable(data.modules);
+	                })
                 .catch(error => {
                     console.error('Error fetching data:', error);
                     updateDebug(`ERRO: ${error.message}`);
