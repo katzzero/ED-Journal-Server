@@ -254,12 +254,38 @@ class JournalMonitor:
             new_state['in_fighter'] = True
             self.ed_data.update('vehicle_state', new_state)
         
-        elif event_type == 'DockFighter':
+        elif event_type == 'SupercruiseExit':
             current_state = self.ed_data.get_all().get('vehicle_state', {})
             new_state = current_state.copy()
-            new_state['in_fighter'] = False
+            new_state.update({
+                'supercruise': False,
+                'in_flight': True # Sai do supercruise, entra em voo normal
+            })
             self.ed_data.update('vehicle_state', new_state)
         
+        elif event_type == 'StartJump':
+            # FSDJump é tratado acima, StartJump é para o início do salto
+            jump_type = event.get('JumpType')
+            if jump_type == 'Hyperspace':
+                current_state = self.ed_data.get_all().get('vehicle_state', {})
+                new_state = current_state.copy()
+                new_state.update({
+                    'supercruise': False,
+                    'in_flight': True # Entra em salto, sai de supercruise
+                })
+                self.ed_data.update('vehicle_state', new_state)
+        
+        elif event_type == 'LandingGear':
+            current_state = self.ed_data.get_all().get('vehicle_state', {})
+            new_state = current_state.copy()
+            new_state['landing_gear_down'] = event.get('Deployed', False)
+            self.ed_data.update('vehicle_state', new_state)
+        
+        elif event_type == 'Shields':
+            current_state = self.ed_data.get_all().get('vehicle_state', {})
+            new_state = current_state.copy()
+            new_state['shields_up'] = event.get('Up', False)
+            self.ed_data.update('vehicle_state', new_state)       
         elif event_type == 'SupercruiseEntry':
             current_state = self.ed_data.get_all().get('vehicle_state', {})
             new_state = current_state.copy()
@@ -273,7 +299,34 @@ class JournalMonitor:
         elif event_type == 'SupercruiseExit':
             current_state = self.ed_data.get_all().get('vehicle_state', {})
             new_state = current_state.copy()
-            new_state['supercruise'] = False
+            new_state.update({
+                'supercruise': False,
+                'in_flight': True # Sai do supercruise, entra em voo normal
+            })
+            self.ed_data.update('vehicle_state', new_state)
+        
+        elif event_type == 'StartJump':
+            # FSDJump é tratado acima, StartJump é para o início do salto
+            jump_type = event.get('JumpType')
+            if jump_type == 'Hyperspace':
+                current_state = self.ed_data.get_all().get('vehicle_state', {})
+                new_state = current_state.copy()
+                new_state.update({
+                    'supercruise': False,
+                    'in_flight': True # Entra em salto, sai de supercruise
+                })
+                self.ed_data.update('vehicle_state', new_state)
+        
+        elif event_type == 'LandingGear':
+            current_state = self.ed_data.get_all().get('vehicle_state', {})
+            new_state = current_state.copy()
+            new_state['landing_gear_down'] = event.get('Deployed', False)
+            self.ed_data.update('vehicle_state', new_state)
+        
+        elif event_type == 'Shields':
+            current_state = self.ed_data.get_all().get('vehicle_state', {})
+            new_state = current_state.copy()
+            new_state['shields_up'] = event.get('Up', False)
             self.ed_data.update('vehicle_state', new_state)
         
         elif event_type == 'Loadout':
