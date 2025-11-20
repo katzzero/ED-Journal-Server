@@ -277,6 +277,7 @@ class JournalMonitor:
             self.ed_data.update('vehicle_state', new_state)
         
         elif event_type == 'Loadout':
+            self.ed_data.update('ship', event.get('Ship', 'Unknown'))
             modules = []
             for mod in event.get("Modules", []):
                 modules.append({
