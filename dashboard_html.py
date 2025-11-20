@@ -626,6 +626,11 @@ def get_dashboard_html():
                 })
                 .then(data => {
                     if (Object.keys(data).length === 0) return;
+                                        // [PERFORMANCE FIX #1] Compare data with lastData before rendering
+                                                            if (lastData && JSON.stringify(lastData) === JSON.stringify(data)) {
+                                                                                    console.log('[CACHE] Dados idênticos, ignorando atualização');
+                                                                                                            return; // Skip rendering if no changes
+                                                                                                                                }
 
                     lastData = data;
                     updateDebug(`Update #${updateCount} - CMDR: ${data.commander}, Ship: ${data.ship}, System: ${data.system}`);
@@ -814,7 +819,7 @@ def get_dashboard_html():
         });
 
         updateDashboard();
-        setInterval(updateDashboard, 2000);
+        setInterval(updateDashboard, 500);
     </script>
 </body>
 </html>
