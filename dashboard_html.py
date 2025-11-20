@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 """
-Elite Dangerous Dashboard HTML Generator
-Generates the interactive web dashboard interface
+Elite Dangerous Dashboard HTML Generator - Enhanced Version
+Generates a beautiful, modern interactive web dashboard interface
 """
 
 
 def get_dashboard_html():
-    """Generate the HTML dashboard page"""
+    """Generate the enhanced HTML dashboard page"""
     return """
 <!DOCTYPE html>
 <html>
@@ -18,232 +18,529 @@ def get_dashboard_html():
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
     <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%);
-            color: #00ff00;
+        * {
             margin: 0;
-            padding: 20px;
+            padding: 0;
+            box-sizing: border-box;
         }
+        
+        body {
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #0a0e17;
+            background-image: 
+                radial-gradient(circle at 20% 50%, rgba(255, 102, 0, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(0, 170, 255, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 40% 20%, rgba(255, 0, 255, 0.03) 0%, transparent 50%);
+            color: #e0e0e0;
+            min-height: 100vh;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+        
         .container {
-            max-width: 1400px;
+            max-width: 1600px;
             margin: 0 auto;
         }
+        
         h1 {
             text-align: center;
-            color: #ff6600;
-            text-shadow: 0 0 10px #ff6600;
+            font-size: 3em;
+            font-weight: 700;
+            background: linear-gradient(135deg, #ff6600 0%, #ff9944 50%, #ffaa00 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+            text-shadow: 0 0 40px rgba(255, 102, 0, 0.3);
+            letter-spacing: 2px;
         }
+        
         h2 {
             color: #00ddff;
-            margin-top: 0;
+            font-size: 1.5em;
+            font-weight: 600;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
+        
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #00ff00;
+            box-shadow: 0 0 10px #00ff00;
+            animation: pulse-status 2s infinite;
+        }
+        
+        @keyframes pulse-status {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.6; transform: scale(0.9); }
+        }
+        
         .status-box {
-            background: rgba(0, 0, 0, 0.7);
-            border: 2px solid #ff6600;
-            border-radius: 10px;
-            padding: 20px;
+            background: linear-gradient(135deg, rgba(20, 25, 35, 0.95) 0%, rgba(15, 20, 30, 0.95) 100%);
+            border: 1px solid rgba(255, 102, 0, 0.3);
+            border-radius: 16px;
+            padding: 25px;
             margin: 20px 0;
-            box-shadow: 0 0 20px rgba(255, 102, 0, 0.3);
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.3),
+                0 0 0 1px rgba(255, 255, 255, 0.05),
+                inset 0 1px 0 rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
         }
+        
+        .status-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 102, 0, 0.1), transparent);
+            transition: left 0.5s;
+        }
+        
+        .status-box:hover::before {
+            left: 100%;
+        }
+        
+        .status-box:hover {
+            transform: translateY(-2px);
+            box-shadow: 
+                0 12px 40px rgba(0, 0, 0, 0.4),
+                0 0 0 1px rgba(255, 102, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+        
         .waiting-status {
-            border-color: #ffaa00;
-            animation: pulse 2s infinite;
+            border-color: rgba(255, 170, 0, 0.4);
+            animation: pulse-box 2s infinite;
         }
+        
+        @keyframes pulse-box {
+            0%, 100% { 
+                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 0 0 20px rgba(255, 170, 0, 0.2);
+            }
+            50% { 
+                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 0 0 40px rgba(255, 170, 0, 0.4);
+            }
+        }
+        
         .coordinates-box {
-            background: rgba(0, 100, 150, 0.3);
-            border: 2px solid #00aaff;
-            border-radius: 10px;
-            padding: 20px;
+            background: linear-gradient(135deg, rgba(0, 50, 80, 0.4) 0%, rgba(0, 30, 60, 0.4) 100%);
+            border: 1px solid rgba(0, 170, 255, 0.3);
+            border-radius: 16px;
+            padding: 25px;
             margin: 20px 0;
-            box-shadow: 0 0 20px rgba(0, 170, 255, 0.3);
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.3),
+                0 0 30px rgba(0, 170, 255, 0.15);
+            transition: all 0.3s ease;
         }
+        
+        .coordinates-box:hover {
+            transform: translateY(-2px);
+            box-shadow: 
+                0 12px 40px rgba(0, 0, 0, 0.4),
+                0 0 40px rgba(0, 170, 255, 0.25);
+        }
+        
         .vehicle-status-box {
-            background: rgba(100, 0, 100, 0.3);
-            border: 2px solid #ff00ff;
-            border-radius: 10px;
-            padding: 20px;
+            background: linear-gradient(135deg, rgba(80, 0, 80, 0.4) 0%, rgba(50, 0, 60, 0.4) 100%);
+            border: 1px solid rgba(255, 0, 255, 0.3);
+            border-radius: 16px;
+            padding: 25px;
             margin: 20px 0;
-            box-shadow: 0 0 20px rgba(255, 0, 255, 0.3);
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.3),
+                0 0 30px rgba(255, 0, 255, 0.15);
+            transition: all 0.3s ease;
         }
+        
+        .vehicle-status-box:hover {
+            transform: translateY(-2px);
+            box-shadow: 
+                0 12px 40px rgba(0, 0, 0, 0.4),
+                0 0 40px rgba(255, 0, 255, 0.25);
+        }
+        
         .bodies-box, .stations-box {
-            background: rgba(50, 50, 0, 0.3);
-            border: 2px solid #ffdd00;
-            border-radius: 10px;
-            padding: 20px;
+            background: linear-gradient(135deg, rgba(80, 70, 0, 0.3) 0%, rgba(50, 40, 0, 0.3) 100%);
+            border: 1px solid rgba(255, 221, 0, 0.3);
+            border-radius: 16px;
+            padding: 25px;
             margin: 20px 0;
-            box-shadow: 0 0 20px rgba(255, 221, 0, 0.2);
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.3),
+                0 0 30px rgba(255, 221, 0, 0.1);
+            transition: all 0.3s ease;
         }
+        
+        .bodies-box:hover, .stations-box:hover {
+            transform: translateY(-2px);
+            box-shadow: 
+                0 12px 40px rgba(0, 0, 0, 0.4),
+                0 0 40px rgba(255, 221, 0, 0.2);
+        }
+        
+        .modules-box {
+            background: linear-gradient(135deg, rgba(0, 80, 120, 0.3) 0%, rgba(0, 50, 80, 0.3) 100%);
+            border: 1px solid rgba(0, 170, 255, 0.3);
+            border-radius: 16px;
+            padding: 25px;
+            margin: 20px 0;
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.3),
+                0 0 30px rgba(0, 170, 255, 0.15);
+            transition: all 0.3s ease;
+        }
+        
+        .modules-box:hover {
+            transform: translateY(-2px);
+            box-shadow: 
+                0 12px 40px rgba(0, 0, 0, 0.4),
+                0 0 40px rgba(0, 170, 255, 0.25);
+        }
+        
         .module-table {
-            position: fixed;
-            top: 42px;
-            right: 10px;
-            background: rgba(5,5,5,0.92);
-            border: 1px solid #444;
-            border-radius: 8px;
-            font-size: 11px;
-            max-width: 270px;
-            min-width: 180px;
-            z-index: 9999;
-            color: #cfcfcf;
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-top: 15px;
         }
+        
         .module-table th, .module-table td {
-            padding: 2px 4px;
+            padding: 10px 12px;
             text-align: left;
-            font-size: 11px;
+            font-size: 0.9em;
         }
+        
         .module-table th {
-            border-bottom: 1px solid #333;
-            background: #363636;
+            background: rgba(0, 100, 150, 0.3);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #00ddff;
+            border-bottom: 2px solid rgba(0, 170, 255, 0.3);
+            text-shadow: 0 0 8px rgba(0, 221, 255, 0.3);
         }
-        .module-table tr:nth-child(even) {
-            background: #222;
+        
+        .module-table th:first-child {
+            border-top-left-radius: 8px;
         }
+        
+        .module-table th:last-child {
+            border-top-right-radius: 8px;
+        }
+        
+        .module-table tr {
+            transition: all 0.2s ease;
+        }
+        
+        .module-table tbody tr:hover {
+            background: rgba(0, 170, 255, 0.15);
+            transform: translateX(4px);
+        }
+        
+        .module-table tbody tr {
+            background: rgba(0, 0, 0, 0.2);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .module-table tbody tr:nth-child(even) {
+            background: rgba(255, 255, 255, 0.02);
+        }
+        
         .module-table .hlth {
-            width: 44px;
-        }
-        .module-table .prio {
-            width: 30px;
+            color: #00ff00;
+            font-weight: 600;
             text-align: center;
         }
+        
+        .module-table .prio {
+            text-align: center;
+            color: #ffaa00;
+            font-weight: 600;
+        }
+        
+        .module-slot {
+            color: #00aaff;
+            font-weight: 500;
+        }
+        
+        .module-item {
+            color: #cfcfcf;
+        }
+        
         .watermark {
             position: fixed;
-            bottom: 7px;
-            right: 12px;
-            color: #666;
-            font-size: 10px;
-            opacity: 0.44;
+            bottom: 10px;
+            right: 15px;
+            color: rgba(255, 255, 255, 0.2);
+            font-size: 11px;
+            opacity: 0.5;
             pointer-events: none;
-            letter-spacing: 0.5px;
+            letter-spacing: 1px;
             font-style: italic;
             z-index: 99999;
+            font-weight: 300;
         }
-        @keyframes pulse {
-            0%, 100% { box-shadow: 0 0 20px rgba(255, 170, 0, 0.3); }
-            50% { box-shadow: 0 0 30px rgba(255, 170, 0, 0.6); }
-        }
+        
         .info-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 15px;
             margin-top: 20px;
         }
-        .info-item {
-            background: rgba(0, 50, 0, 0.3);
-            padding: 15px;
-            border-radius: 5px;
-            border-left: 3px solid #00ff00;
+        
+        .info-item, .coord-item, .vehicle-item {
+            background: rgba(255, 255, 255, 0.02);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
         }
-        .coord-item {
-            background: rgba(0, 50, 100, 0.3);
-            padding: 15px;
-            border-radius: 5px;
-            border-left: 3px solid #00aaff;
+        
+        .info-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 3px;
+            background: linear-gradient(180deg, #00ff00, #00aa00);
+            box-shadow: 0 0 10px #00ff00;
         }
-        .vehicle-item {
-            background: rgba(50, 0, 50, 0.3);
-            padding: 15px;
-            border-radius: 5px;
-            border-left: 3px solid #ff00ff;
+        
+        .coord-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 3px;
+            background: linear-gradient(180deg, #00aaff, #0066cc);
+            box-shadow: 0 0 10px #00aaff;
         }
+        
+        .vehicle-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 3px;
+            background: linear-gradient(180deg, #ff00ff, #cc00cc);
+            box-shadow: 0 0 10px #ff00ff;
+        }
+        
+        .info-item:hover, .coord-item:hover, .vehicle-item:hover {
+            transform: translateX(4px);
+            background: rgba(255, 255, 255, 0.04);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+        
         .info-label {
             color: #888;
-            font-size: 0.9em;
+            font-size: 0.85em;
             text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+            margin-bottom: 8px;
         }
+        
         .info-value {
             color: #00ff00;
-            font-size: 1.2em;
-            font-weight: bold;
-            margin-top: 5px;
+            font-size: 1.3em;
+            font-weight: 700;
+            text-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
         }
+        
         .coord-value {
             color: #00ddff;
-            font-size: 1.2em;
-            font-weight: bold;
-            margin-top: 5px;
+            font-size: 1.3em;
+            font-weight: 700;
             font-family: 'Courier New', monospace;
+            text-shadow: 0 0 10px rgba(0, 221, 255, 0.3);
         }
+        
         .vehicle-value {
             color: #ff00ff;
-            font-size: 1.2em;
-            font-weight: bold;
-            margin-top: 5px;
+            font-size: 1.3em;
+            font-weight: 700;
+            text-shadow: 0 0 10px rgba(255, 0, 255, 0.3);
         }
+        
         .warning {
             color: #ffaa00;
             text-align: center;
             font-size: 1.2em;
-            padding: 20px;
-            background: rgba(255, 170, 0, 0.1);
-            border-radius: 5px;
+            padding: 30px;
+            background: linear-gradient(135deg, rgba(255, 170, 0, 0.1), rgba(255, 136, 0, 0.05));
+            border-radius: 12px;
             margin: 20px 0;
+            border: 1px solid rgba(255, 170, 0, 0.3);
+            box-shadow: 0 4px 20px rgba(255, 170, 0, 0.1);
         }
+        
+        .warning small {
+            display: block;
+            margin-top: 10px;
+            opacity: 0.8;
+            font-size: 0.85em;
+        }
+        
         .last-update {
             text-align: center;
             color: #666;
-            margin-top: 20px;
+            margin-top: 30px;
             font-size: 0.9em;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
         }
+        
         .planet-icon, .station-icon, .vehicle-icon {
             font-size: 1.5em;
-            margin-right: 10px;
+            filter: drop-shadow(0 0 5px currentColor);
         }
+        
         .body-list, .station-list {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 10px;
-            margin-top: 15px;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
         }
+        
         .body-card, .station-card {
-            background: rgba(0, 0, 0, 0.5);
-            border: 1px solid #ffdd00;
-            border-radius: 5px;
-            padding: 12px;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 221, 0, 0.2);
+            border-radius: 12px;
+            padding: 18px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
         }
+        
+        .body-card::after, .station-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(circle, rgba(255, 221, 0, 0.05), transparent);
+            border-radius: 50%;
+            transform: translate(30%, -30%);
+        }
+        
+        .body-card:hover, .station-card:hover {
+            transform: translateY(-4px);
+            background: rgba(0, 0, 0, 0.6);
+            border-color: rgba(255, 221, 0, 0.4);
+            box-shadow: 0 8px 24px rgba(255, 221, 0, 0.2);
+        }
+        
         .body-name, .station-name {
             color: #ffdd00;
-            font-weight: bold;
-            font-size: 1.1em;
-            margin-bottom: 8px;
+            font-weight: 700;
+            font-size: 1.15em;
+            margin-bottom: 12px;
+            text-shadow: 0 0 10px rgba(255, 221, 0, 0.3);
         }
+        
         .body-detail, .station-detail {
             color: #aaa;
             font-size: 0.9em;
-            margin: 3px 0;
+            margin: 6px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
+        
         .landable {
             color: #00ff00;
-            font-weight: bold;
+            font-weight: 700;
+            text-shadow: 0 0 8px rgba(0, 255, 0, 0.4);
         }
+        
         .status-active {
             color: #00ff00;
-            font-weight: bold;
+            font-weight: 700;
+            text-shadow: 0 0 8px rgba(0, 255, 0, 0.4);
         }
+        
         .status-inactive {
             color: #666;
         }
+        
         .debug-info {
             position: fixed;
             bottom: 10px;
             left: 10px;
-            background: rgba(0, 0, 0, 0.91);
+            background: rgba(0, 0, 0, 0.95);
             color: #0f0;
-            padding: 9px 12px;
+            padding: 12px 16px;
             border: 1px solid #0f0;
-            border-radius: 5px;
-            font-family: monospace;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
             font-size: 0.8em;
-            max-width: 330px;
+            max-width: 350px;
             z-index: 99999;
+            box-shadow: 0 4px 20px rgba(0, 255, 0, 0.3);
         }
-        #content { min-height: 80vh; padding: 20px; color: #cfcfcf; }
+        
+        #content { 
+            min-height: 80vh; 
+            padding: 20px; 
+            color: #cfcfcf;
+        }
+        
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.3);
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 102, 0, 0.5);
+            border-radius: 5px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 102, 0, 0.7);
+        }
+        
+        /* Loading animation */
+        @keyframes shimmer {
+            0% { background-position: -1000px 0; }
+            100% { background-position: 1000px 0; }
+        }
+        
+        .loading {
+            background: linear-gradient(90deg, rgba(255, 255, 255, 0.02) 25%, rgba(255, 255, 255, 0.05) 50%, rgba(255, 255, 255, 0.02) 75%);
+            background-size: 1000px 100%;
+            animation: shimmer 2s infinite;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>🚀 Elite Dangerous Dashboard</h1>
-        <div id="content"></div>
+        <div id="content" class="loading"></div>
     </div>
     <div id="modules-box"></div>
     <div id="debug" class="debug-info" style="display: none;"></div>
@@ -279,28 +576,39 @@ def get_dashboard_html():
         }
 
         function renderModulesTable(modules) {
+            const modulesContainer = document.getElementById('modules-box');
+            
             if (!modules || modules.length === 0) {
-                document.getElementById('modules-box').innerHTML = '';
+                modulesContainer.innerHTML = '';
                 return;
             }
-            let html = '<div class="module-table"><table><thead><tr>';
-            html += '<th>Slot</th><th>Módulo</th><th class="hlth">Vida</th><th class="prio">Prior.</th></tr></thead><tbody>';
+            
+            let html = '<div class="modules-box">';
+            html += '<h2><span class="station-icon">⚙️</span>Módulos da Nave (' + modules.length + ')</h2>';
+            html += '<table class="module-table"><thead><tr>';
+            html += '<th>Slot</th><th>Módulo</th><th class="hlth">Integridade</th><th class="prio">Prioridade</th></tr></thead><tbody>';
+            
             modules.forEach(m => {
+                const health = m.health != null ? (m.health * 100).toFixed(0) : '--';
+                const healthColor = health >= 80 ? '#00ff00' : health >= 50 ? '#ffaa00' : '#ff3333';
+                
                 html += `<tr>
-                  <td>${m.slot ? m.slot.replace('Slot', '').slice(0,10) : '-'}</td>
-                  <td>${(m.item || '-').split('_').pop().slice(0,13)}</td>
-                  <td class="hlth">${m.health != null ? (m.health * 100).toFixed(0) : '--'}%</td>
+                  <td class="module-slot">${m.slot ? m.slot.replace('Slot', '').replace(/([A-Z])/g, ' $1').trim() : '-'}</td>
+                  <td class="module-item">${(m.item || '-').split('_').slice(-2).join(' ')}</td>
+                  <td class="hlth" style="color: ${healthColor}">${health}%</td>
                   <td class="prio">${m.priority != null ? m.priority : '-'}</td>
                 </tr>`;
             });
+            
             html += '</tbody></table></div>';
-            document.getElementById('modules-box').innerHTML = html;
+            modulesContainer.innerHTML = html;
         }
 
         function updateDashboard() {
             updateCount++;
             const timestamp = new Date().getTime();
-            fetch(`/api/data?_=${timestamp}`, {                cache: 'no-cache',
+            fetch(`/api/data?_=${timestamp}`, {
+                cache: 'no-cache',
                 headers: {
                     'Cache-Control': 'no-cache, no-store, must-revalidate',
                     'Pragma': 'no-cache'
@@ -308,8 +616,6 @@ def get_dashboard_html():
             })
                 .then(response => {
                     if (!response.ok) {
-                        // Se o status for 404, o servidor pode estar em um estado de inicialização.
-                        // Retorna um objeto vazio para evitar o erro, mas não processa dados.
                         if (response.status === 404) {
                             console.warn('API endpoint not found (404). Server might be initializing.');
                             return {};
@@ -319,7 +625,6 @@ def get_dashboard_html():
                     return response.json();
                 })
                 .then(data => {
-                    // Se o objeto de dados estiver vazio, interrompe o processamento do dashboard
                     if (Object.keys(data).length === 0) return;
 
                     lastData = data;
@@ -327,7 +632,7 @@ def get_dashboard_html():
                     let html = '';
                     const statusClass = data.waiting_for_files ? 'status-box waiting-status' : 'status-box';
                     html += `<div class="${statusClass}">`;
-                    html += `<div class="info-label">Status do Sistema</div>`;
+                    html += `<div class="info-label"><span class="status-indicator"></span> Status do Sistema</div>`;
                     html += `<div class="info-value">${data.status}</div>`;
                     html += `</div>`;
 
@@ -484,7 +789,7 @@ def get_dashboard_html():
                     }
 
                     document.getElementById('content').innerHTML = html;
-                    // Renderiza tabela de módulos
+                    document.getElementById('content').classList.remove('loading');
                     renderModulesTable(data.modules);
                 })
                 .catch(error => {
@@ -492,6 +797,7 @@ def get_dashboard_html():
                     updateDebug(`ERRO: ${error.message}`);
                     document.getElementById('content').innerHTML = 
                         `<div class="warning">Erro ao conectar com o servidor<br><small>${error.message}</small></div>`;
+                    document.getElementById('content').classList.remove('loading');
                 });
         }
 
