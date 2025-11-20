@@ -27,7 +27,6 @@ class JournalMonitor:
         self.last_position = 0
         self.status_callback = None
         self.allow_start_without_files = allow_start_without_files
-        self.processed_events = set()  # [PERFORMANCE FIX #3] Track processed events to prevent duplicates
         
         if not self.journal_dir:
             self.ed_data.update('status', 'Aguardando arquivos do Elite Dangerous...')
@@ -336,7 +335,6 @@ class JournalMonitor:
                 if current_journal != self.last_file:
                     self.last_file = current_journal
                     self.last_position = 0
-                                self.processed_events.clear()  # [PERFORMANCE FIX #3] Clear processed events when file changes
                     self.ed_data.update('status', f'Monitorando: {current_journal.name}')
                     self.ed_data.update('journal_file', current_journal.name)
                     print(f"Reading journal: {current_journal.name}")
@@ -349,10 +347,6 @@ class JournalMonitor:
                     for line in lines:
                         try:
                             event = json.loads(line)
-                                                        event_key = f\"{event.get('timestamp')}-{event.get('event')}\"  # [PERFORMANCE FIX #3] Create unique event identifier
-                                                        if event_key in self.processed_events:
-                                                                                            continue  # Skip duplicate event
-                                                        self.processed_events.add(event_key)
                             self.process_event(event)
                         except json.JSONDecodeError:
                             pass
