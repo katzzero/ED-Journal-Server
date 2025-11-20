@@ -700,6 +700,11 @@ def get_dashboard_html():
                                 html += `<div class="coord-value">${coords.altitude.toFixed(0)} m</div>`;
                                 html += `</div>`;
                             }
+                            
+                html += '<div class="coord-item">';
+                html += '<div class="info-label">Status</div>';
+                html += '<div class="coord-value" style="color: #ffaa00;">🪐 Próximo a um Planeta</div>';
+                html += '</div>';
                             html += `</div></div>`;
                         }
 
