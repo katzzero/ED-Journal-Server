@@ -27,7 +27,7 @@ class JournalMonitor:
         self.last_position = 0
         self.status_callback = None
         self.allow_start_without_files = allow_start_without_files
-                self.processed_events = set()  # [PERFORMANCE FIX #3] Track processed events to prevent duplicates
+            self.processed_events = set()  # [PERFORMANCE FIX #3] Track processed events to prevent duplicates
         
         if not self.journal_dir:
             self.ed_data.update('status', 'Aguardando arquivos do Elite Dangerous...')
