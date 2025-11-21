@@ -326,8 +326,7 @@ def get_dashboard_html():
         
         .info-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 15px;
+repeat(4, 1fr)            gap: 15px;
             margin-top: 20px;
         }
         
@@ -383,7 +382,7 @@ def get_dashboard_html():
         
         .info-label {
             color: #888;
-            font-size: 0.85em;
+            font-size: 0.75em;
             text-transform: uppercase;
             letter-spacing: 1px;
             font-weight: 600;
@@ -392,14 +391,14 @@ def get_dashboard_html():
         
         .info-value {
             color: #00ff00;
-            font-size: 1.3em;
+            font-size: 1.1em;
             font-weight: 700;
             text-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
         }
         
         .coord-value {
             color: #00ddff;
-            font-size: 1.3em;
+            font-size: 1.1em;
             font-weight: 700;
             font-family: 'Courier New', monospace;
             text-shadow: 0 0 10px rgba(0, 221, 255, 0.3);
@@ -407,7 +406,7 @@ def get_dashboard_html():
         
         .vehicle-value {
             color: #ff00ff;
-            font-size: 1.3em;
+            font-size: 1.1em;
             font-weight: 700;
             text-shadow: 0 0 10px rgba(255, 0, 255, 0.3);
         }
@@ -428,7 +427,7 @@ def get_dashboard_html():
             display: block;
             margin-top: 10px;
             opacity: 0.8;
-            font-size: 0.85em;
+            font-size: 0.75em;
         }
         
         .last-update {
@@ -567,6 +566,20 @@ def get_dashboard_html():
             background: linear-gradient(90deg, rgba(255, 255, 255, 0.02) 25%, rgba(255, 255, 255, 0.05) 50%, rgba(255, 255, 255, 0.02) 75%);
             background-size: 1000px 100%;
             animation: shimmer 2s infinite;
+        }
+		
+        .dashboard-footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(10, 14, 23, 0.95);
+            border-top: 1px solid rgba(255, 102, 0, 0.3);
+            padding: 8px 20px;
+            font-size: 9pt;
+            color: #00ff00;
+            text-align: left;
+            z-index: 1000;
         }
     </style>
 </head>
