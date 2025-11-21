@@ -326,7 +326,8 @@ def get_dashboard_html():
         
         .info-grid {
             display: grid;
-repeat(4, 1fr)            gap: 15px;
+grid-template-columns: repeat(4, 1fr);
+gap: 15px;
             margin-top: 20px;
         }
         
