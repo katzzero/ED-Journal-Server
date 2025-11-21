@@ -333,7 +333,8 @@ def get_dashboard_html():
         
         .info-item, .coord-item, .vehicle-item {
             background: rgba(255, 255, 255, 0.02);
-            padding: 20px;
+            padding: clamp(15px, 2vw, 25px);
+			height: auto;
             border-radius: 12px;
             border: 1px solid rgba(255, 255, 255, 0.05);
             position: relative;
@@ -457,7 +458,8 @@ def get_dashboard_html():
             background: rgba(0, 0, 0, 0.4);
             border: 1px solid rgba(255, 221, 0, 0.2);
             border-radius: 12px;
-            padding: 18px;
+            padding: clamp(15px, 1.5vw, 20px);
+			height: auto;
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
