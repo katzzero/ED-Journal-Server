@@ -120,6 +120,8 @@ def get_dashboard_html():
             position: relative;
             overflow: hidden;
             transition: all 0.3s ease;
+			white-space: nowrap;
+			font-size: 0.7em;
         }
         
         .status-box::before {
