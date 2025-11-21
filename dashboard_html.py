@@ -248,7 +248,7 @@ def get_dashboard_html():
         .module-table th, .module-table td {
             padding: 5px 8px; /* Reduzindo o padding */
             text-align: left;
-            font-size: 0.8em; /* Reduzindo o tamanho da fonte */
+            font-size: 0.65em; /* Reduzindo o tamanho da fonte */
 			word-break: break-word;
 			white-space: normal;
         }
