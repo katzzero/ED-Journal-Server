@@ -431,7 +431,8 @@ gap: 15px;
             font-size: 0.75em;
         }
         
-        .last-update {
+        .717
+		{
             text-align: center;
             color: #666;
             margin-top: 30px;
@@ -568,7 +569,35 @@ gap: 15px;
             background-size: 1000px 100%;
             animation: shimmer 2s infinite;
         }
-		
+
+
+		.footer-wrapper {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    align-items: flex-start;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 8px 20px;
+    background: rgba(10, 14, 23, 0.95);
+    border-top: 1px solid rgba(255, 102, 0, 0.3);
+    z-index: 1000;
+}
+
+.footer-wrapper .status-box {
+    flex: 1;
+    margin: 0;
+    max-width: 400px;
+}
+
+.footer-wrapper .last-update {
+    flex: 1;
+    margin: 0;
+    max-width: 400px;
+    text-align: center;
+}
         .dashboard-footer {
             position: fixed;
             bottom: 0;
@@ -687,6 +716,7 @@ gap: 15px;
 	                    updateDebug(`Update #${updateCount} - CMDR: ${data.commander}, Ship: ${data.ship}, System: ${data.system}`);
 	                    let html = '';
 	                    const statusClass = data.waiting_for_files ? 'status-box waiting-status' : 'status-box';
+						    html += '<div class="footer-wrapper">'; 
 	                    html += `<div class="${statusClass}">`;
 	                    html += `<div class="info-label"><span class="status-indicator"></span> Status do Sistema</div>`;
 	                    html += `<div class="info-value">${data.status}</div>`;
@@ -847,6 +877,7 @@ gap: 15px;
 	                    if (data.last_update) {
 	                        const updateTime = new Date(data.last_update).toLocaleString('pt-BR');
 	                        html += `<div class="last-update">Última atualização: ${updateTime} | Refresh #${updateCount}</div>`;
+							    html += '</div>';  // Close footer-wrapper
 	                    }
 	
 	                    document.getElementById('left-content').innerHTML = html;
