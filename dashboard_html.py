@@ -33,7 +33,7 @@ def get_dashboard_html():
                 radial-gradient(circle at 40% 20%, rgba(255, 0, 255, 0.03) 0%, transparent 50%);
             color: #e0e0e0;
             min-height: 100vh;
-            padding: max(1vw, 15px);
+            padding: max(0.5vw, 8px);
             overflow-x: hidden;
         }
         
@@ -44,8 +44,8 @@ def get_dashboard_html():
         
         .main-layout {
             display: flex;
-            gap: gap: max(1vw, 15px);
-            margin-top: max(1vw, 15px);
+            gap: gap: max(0.5vw, 8px);
+            margin-top: max(0.5vw, 8px);
         }
         
         .left-column {
@@ -110,8 +110,8 @@ def get_dashboard_html():
             background: linear-gradient(135deg, rgba(20, 25, 35, 0.95) 0%, rgba(15, 20, 30, 0.95) 100%);
             border: 1px solid rgba(255, 102, 0, 0.3);
             border-radius: 16px;
-            padding: clamp(15px, 2.5vw, 25px);
-            margin: max(1vw, 15px) 0;
+            padding: clamp(5px, 1.2vw, 12px);
+            margin: max(0.5vw, 8px) 0;
             box-shadow: 
                 0 8px 32px rgba(0, 0, 0, 0.3),
                 0 0 0 1px rgba(255, 255, 255, 0.05),
@@ -163,8 +163,8 @@ def get_dashboard_html():
             background: linear-gradient(135deg, rgba(0, 50, 80, 0.4) 0%, rgba(0, 30, 60, 0.4) 100%);
             border: 1px solid rgba(0, 170, 255, 0.3);
             border-radius: 16px;
-            padding: clamp(15px, 2.5vw, 25px);
-            margin: max(1vw, 15px) 0;
+            padding: clamp(5px, 1.2vw, 12px);
+            margin: max(0.5vw, 8px) 0;
             box-shadow: 
                 0 8px 32px rgba(0, 0, 0, 0.3),
                 0 0 30px rgba(0, 170, 255, 0.15);
@@ -333,7 +333,7 @@ def get_dashboard_html():
         
         .info-item, .coord-item, .vehicle-item {
             background: rgba(255, 255, 255, 0.02);
-            padding: clamp(15px, 2vw, 25px);
+            padding: clamp(5px, 1vw, 12px);
 			height: auto;
             border-radius: 12px;
             border: 1px solid rgba(255, 255, 255, 0.05);
@@ -458,7 +458,7 @@ def get_dashboard_html():
             background: rgba(0, 0, 0, 0.4);
             border: 1px solid rgba(255, 221, 0, 0.2);
             border-radius: 12px;
-            padding: clamp(15px, 1.5vw, 20px);
+            padding: clamp(5px, 0.8vw, 10px);
 			height: auto;
             transition: all 0.3s ease;
             position: relative;
