@@ -116,8 +116,7 @@ class JournalMonitor:
                     })
                 self.ed_data.update('system_stations', stations)
             
-            # Captura coordenadas planetárias se disponíveis
-            if 'Latitude' in event and 'Longitude' in event:
+                # Captura coordenadas planetárias se disponíveis (inclui SRV)            if 'Latitude' in event and 'Longitude' in event:
                 coords = {
                     'latitude': event.get('Latitude'),
                     'longitude': event.get('Longitude'),
