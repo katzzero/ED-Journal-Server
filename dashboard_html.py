@@ -239,6 +239,7 @@ def get_dashboard_html():
         
         .module-table {
             width: 100%;
+			table-layout: fixed;
             border-collapse: separate;
             border-spacing: 0;
             margin-top: 15px;
@@ -248,6 +249,8 @@ def get_dashboard_html():
             padding: 5px 8px; /* Reduzindo o padding */
             text-align: left;
             font-size: 0.8em; /* Reduzindo o tamanho da fonte */
+			word-break: break-word;
+			white-space: normal;
         }
         
         .module-table th {
