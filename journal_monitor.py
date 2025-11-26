@@ -1,3 +1,15 @@
+
+elif event_type == 'ModuleInfo':
+    modules = []
+    for mod in event.get("Modules", []):
+        modules.append({
+            "slot": mod.get("Slot"),
+            "item": mod.get("Item"),
+            "on": mod.get("On"),
+            "priority": mod.get("Priority"),
+            "health": mod.get("Health")
+        })
+    self.ed_data.update("modules", modules)
 #!/usr/bin/env python3
 """
 Elite Dangerous Journal Monitor
